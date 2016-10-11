@@ -33,3 +33,5 @@ ln -s <tmux.conf> $HOME/.tmux.conf
 * For a linux installation, the tmux configuration has
 to be slightly modified: uncomment `reattach-to-user-namespace` in `.tmux.conf`.
 * On linux, tmux should be aliased with `tmux -2` to get 256 color support.
+
+![](https://www.dropbox.com/s/nyx0dfxxvaz1s3o/tmuxvimzsh.png?dl=0)
