@@ -28,6 +28,13 @@ ln -s <.zshrc> $HOME/.zshrc
 ln -s <tmux.conf> $HOME/.tmux.conf
 ```
 
+# python support through jedi
+```
+cd $HOME/.vim/bundle/jedi-vim/
+git submodule update --init
+```
+
+
 # Remarks
 
 * For a linux installation, the tmux configuration has
