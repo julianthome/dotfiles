@@ -36,11 +36,17 @@ set expandtab
 
 " buffers
 set hidden " allow hidden buffers
-nmap <leader>T :enew<CR>
-nmap <leader>l :bnext<CR>
-nmap <leader>h :bprevious<CR>
-nmap <leader>bd :bd<CR> 
-nmap <leader>bl :ls<CR>
+
+nnoremap <silent> [b :bprevious<CR> 
+nnoremap <silent> ]b :bnext<CR> 
+nnoremap <silent> [B :bfirst<CR> 
+nnoremap <silent> ]B :blast<CR>
+nnoremap <leader>bd :bd<CR> 
+nnoremap <leader>bl :ls<CR>
+
+" command history
+cnoremap <C-p> <Up> 
+cnoremap <C-n> <Down>
 
 " ,lv to display pdf
 map ,lv <leader>lv
@@ -174,7 +180,7 @@ inoremap <silent><C-k> <C-R>=OmniPopup('k')<CR>i
 
 " ctags
 command! MakeTags !ctags -R .
-
+autocmd BufWritePost * call system("ctags -R")
 " file search
 set path+=**
 set wildmenu
