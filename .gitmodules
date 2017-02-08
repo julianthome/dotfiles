@@ -61,3 +61,6 @@
 [submodule "fonts"]
 	path = fonts
 	url = https://github.com/powerline/fonts.git
+[submodule ".emacs.d"]
+	path = .emacs.d
+	url = https://github.com/syl20bnr/spacemacs
