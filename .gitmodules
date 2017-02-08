@@ -64,3 +64,6 @@
 [submodule ".emacs.d"]
 	path = .emacs.d
 	url = https://github.com/syl20bnr/spacemacs
+[submodule "source-code-pro"]
+	path = source-code-pro
+	url = https://github.com/adobe-fonts/source-code-pro.git
