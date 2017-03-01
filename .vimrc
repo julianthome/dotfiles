@@ -129,8 +129,8 @@ let g:Tex_CompileRule_ps = 'dvips -Pwww -o $*.ps $*.dvi'
 let g:Tex_CompileRule_pspdf = 'ps2pdf $*.ps'
 let g:Tex_CompileRule_dvipdf = 'dvipdfm $*.dvi'
 " let g:Tex_CompileRule_pdf = 'pdflatex -synctex=1 --interaction=nonstopmode $*'
-let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*'
-
+" let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*'
+let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
 autocmd VimEnter * wincmd p
 
 " airline
