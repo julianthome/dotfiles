@@ -128,10 +128,12 @@ let g:Tex_CompileRule_dvi = 'latex --interaction=nonstopmode $*'
 let g:Tex_CompileRule_ps = 'dvips -Pwww -o $*.ps $*.dvi'
 let g:Tex_CompileRule_pspdf = 'ps2pdf $*.ps'
 let g:Tex_CompileRule_dvipdf = 'dvipdfm $*.dvi'
-" let g:Tex_CompileRule_pdf = 'pdflatex -synctex=1 --interaction=nonstopmode $*'
-" let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*'
 let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
 autocmd VimEnter * wincmd p
+
+" Background commands for building latex documents
+map <leader>lr :w<CR>:Start! latexmk -pdf -pdflatex="pdflatex --shell-escape -file-line-error -synctex=1 -interaction=nonstopmode \%O \%S" %<CR>
+map <leader>lc :w<CR>:Start! latexmk -C<CR>
 
 " airline
 let g:airline#extensions#tabline#enabled = 1
@@ -181,7 +183,8 @@ inoremap <silent><C-k> <C-R>=OmniPopup('k')<CR>i
 
 " ctags
 command! MakeTags !ctags -R .
-autocmd BufWritePost * call system("ctags -R")
+"autocmd BufWritePost * call system("ctags -R")
+
 " file search
 set path+=**
 set wildmenu

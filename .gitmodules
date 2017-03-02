@@ -67,3 +67,6 @@
 [submodule "source-code-pro"]
 	path = source-code-pro
 	url = https://github.com/adobe-fonts/source-code-pro.git
+[submodule ".vim/bundle/vim-dispatch"]
+	path = .vim/bundle/vim-dispatch
+	url = git://github.com/tpope/vim-dispatch.git
