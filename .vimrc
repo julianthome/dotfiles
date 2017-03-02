@@ -132,7 +132,7 @@ let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synct
 autocmd VimEnter * wincmd p
 
 " Background commands for building latex documents
-map <leader>lr :w<CR>:Start! latexmk -pdf -pdflatex="pdflatex --shell-escape -file-line-error -synctex=1 -interaction=nonstopmode \%O \%S" %<CR>
+map <leader>lr :w<CR>:Start! latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*%<CR>
 map <leader>lc :w<CR>:Start! latexmk -C<CR>
 
 " airline
