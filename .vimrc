@@ -10,7 +10,7 @@ filetype plugin indent on
 syntax enable
 syntax on
 set background=dark
-colorscheme darcula 
+colorscheme darcula
 let g:solarized_termtrans = 1
 
 set autoread
