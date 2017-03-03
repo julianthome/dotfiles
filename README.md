@@ -9,7 +9,7 @@ my personal configuration files for
 # checkout
 ```
 git clone https://github.com/julianthome/dotfiles.git
-gut submodule init
+git submodule init
 git submodule update
 ```
 

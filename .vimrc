@@ -150,40 +150,41 @@ let g:airline#extensions#tabline#enabled = 1
 " " Show just the filename
 let g:airline#extensions#tabline#fnamemod = ':t'
 
-map <Leader>g :call RopeGotoDefinition()<CR>
-let ropevim_enable_shortcuts=1
-let g:pymode_rope_goto_def_newwin="vnew"
-let g:pymode_rope_extended_complete=1
-let g:pymode_breakpoint=1
-let g:pymode_syntax=1
-let g:pymode_syntax_builtin_objs=0
-let g:pymode_syntax_builtin_funcs=0
-
-" jedi mode
-let g:jedi#usages_command = "<leader>z"
-let g:jedi#popup_on_dot = 0
-let g:jedi#popup_select_first = 0
-" Better navigating through omnicomplete option list
-" " See
-" http://stackoverflow.com/questions/2170023/how-to-map-keys-for-popup-menu-in-vim
-" set completeopt=longest,menuone
-function! OmniPopup(action)
-	if pumvisible()
-		if a:action == 'j'
-			return "\<C-N>"
-		elseif a:action == 'k'
-			return "\<C-P>"
-		endif
-	endif
-	return a:action
-endfunction
+"map <Leader>g :call RopeGotoDefinition()<CR>
+"let ropevim_enable_shortcuts=1
+"let g:pymode_rope_goto_def_newwin="vnew"
+"let g:pymode_rope_extended_complete=1
+"let g:pymode_breakpoint=1
+"let g:pymode_syntax=1
+"let g:pymode_syntax_builtin_objs=0
+"let g:pymode_syntax_builtin_funcs=0
+"
+"" jedi mode
+"
+"let g:pymode_rope_lookup_project = 0
+"let g:jedi#usages_command = "<leader>z"
+"let g:jedi#popup_on_dot = 0
+"let g:jedi#popup_select_first = 0
+"" Better navigating through omnicomplete option list
+"" " See
+"" http://stackoverflow.com/questions/2170023/how-to-map-keys-for-popup-menu-in-vim
+"" set completeopt=longest,menuone
+"function! OmniPopup(action)
+"	if pumvisible()
+"		if a:action == 'j'
+"			return "\<C-N>"
+"		elseif a:action == 'k'
+"			return "\<C-P>"
+"		endif
+"	endif
+"	return a:action
+"endfunction
 
 inoremap <silent><C-j> <C-R>=OmniPopup('j')<CR>
 inoremap <silent><C-k> <C-R>=OmniPopup('k')<CR>i
 
 " ctags
 command! MakeTags !ctags -R .
-"autocmd BufWritePost * call system("ctags -R")
 
 " file search
 set path+=**
