@@ -14,8 +14,6 @@ Plug 'tpope/vim-dispatch'
 Plug 'ctrlpvim/ctrlp.vim'
 call plug#end()
 
-"execute pathogen#infect()
-
 " remap leader
 let mapleader = ","
 
@@ -147,13 +145,12 @@ let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synct
 
 if has('nvim')
     let g:vimtex_latexmk_progname = 'nvr'
-endif
-
-autocmd VimEnter * wincmd p
-
-" Background commands for building latex documents
+    
+endif 
 map <leader>lr :w<CR>:Start! latexmk -f -bibtex -pdf *.main<CR>
 map <leader>lc :w<CR>:Start! latexmk -C<CR>
+
+autocmd VimEnter * wincmd p
 
 " airline
 let g:airline#extensions#tabline#enabled = 1
