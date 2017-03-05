@@ -1,4 +1,20 @@
-execute pathogen#infect()
+call plug#begin('~/.vim/plugged')
+Plug 'blueshirts/darcula'
+Plug 'davidhalter/jedi'
+Plug 'flazz/vim-colorschemes'
+Plug 'altercation/vim-colors-solarized'
+Plug 'klen/python-mode'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-latex/vim-latex'
+Plug 'wincent/command-t'
+Plug 'tpope/vim-dispatch'
+Plug 'ctrlpvim/ctrlp.vim'
+call plug#end()
+
+"execute pathogen#infect()
 
 " remap leader
 let mapleader = ","
@@ -128,6 +144,10 @@ let g:Tex_DefaultTargetFormat = 'pdf'
 let g:Tex_MultipleCompileFormats = 'pdf'
 let g:Tex_DefaultTargetFormat='pdf'
 let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
+
+if has('nvim')
+    let g:vimtex_latexmk_progname = 'nvr'
+endif
 
 autocmd VimEnter * wincmd p
 
