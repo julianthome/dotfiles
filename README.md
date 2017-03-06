@@ -22,11 +22,11 @@ chsh -s /sbin/zsh
 
 # link configuration
 ```
-ln -s .vim $HOME/.vim
-ln -s .vimrc $HOME/.vimrc
-ln -s .zshrc $HOME/.zshrc
-ln -s tmux.conf $HOME/.tmux.conf
-ln -s .spacemacs $HOME/.spacemacs
+ln -s dotfiles/.vim 
+ln -s dotfiles/.vimrc
+ln -s dotfiles/.zshrc 
+ln -s dotfiles/tmux.conf 
+ln -s dotfiles/.spacemacs
 ```
 
 # python support through jedi
