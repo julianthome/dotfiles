@@ -1,10 +1,10 @@
 call plug#begin('~/.vim/plugged')
 Plug 'blueshirts/darcula'
-Plug 'davidhalter/jedi'
+Plug 'davidhalter/jedi', {'on_ft': 'python'}
 Plug 'flazz/vim-colorschemes'
 Plug 'altercation/vim-colors-solarized'
 Plug 'klen/python-mode'
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -14,6 +14,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'chriskempson/tomorrow-theme'
 Plug 'chriskempson/base16-vim'
+Plug 'mhartington/oceanic-next'
 call plug#end()
 " remap leader
 let mapleader = ","
@@ -23,12 +24,25 @@ autocmd! BufWritePost .vimrc source
 autocmd! BufWritePost * Neomake
 filetype plugin indent on
 
+"set encoding=utf8
 set termguicolors
-
+set termguicolors
+set noshowmode
+filetype on
 syntax enable
 syntax on
+
+"colorscheme base16-eighties
+colorscheme OceanicNext
 set background=dark
-colorscheme base16-eighties
+
+let g:vim_markdown_folding_disabled = 1
+" turn on spelling for markdown files
+autocmd BufRead,BufNewFile *.md setlocal spell complete+=kspell
+" highlight bad words in red
+autocmd BufRead,BufNewFile *.md hi SpellBad guibg=#ff2929 guifg=#ffffff" ctermbg=224
+" disable markdown auto-preview. Gets annoying
+let g:instant_markdown_autostart = 0
 
 
 set autoread
@@ -158,51 +172,29 @@ autocmd VimEnter * wincmd p
 
 " airline
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-set laststatus=2
-let g:airline_theme='laederon'
-set background=dark
-let g:Powerline_symbols = 'fancy'
-set encoding=utf-8
-set t_Co=256
-" Enable the list of buffers
-let g:airline#extensions#tabline#enabled = 1
-
-" " Show just the filename
+set hidden
 let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#tabline#show_tab_nr = 1
+"let g:airline_powerline_fonts = 1
+let g:airline_theme='oceanicnext'
+"cnoreabbrev <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
+nmap <leader>t :term<cr>
+nmap <leader>, :bnext<CR>
+nmap <leader>. :bprevious<CR>
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
+"set guifont=Sauce\ Code\ Pro\ Nerd\ Font\ Complete:h13
+"}}}
 
-"map <Leader>g :call RopeGotoDefinition()<CR>
-"let ropevim_enable_shortcuts=1
-"let g:pymode_rope_goto_def_newwin="vnew"
-"let g:pymode_rope_extended_complete=1
-"let g:pymode_breakpoint=1
-"let g:pymode_syntax=1
-"let g:pymode_syntax_builtin_objs=0
-"let g:pymode_syntax_builtin_funcs=0
-"
-"" jedi mode
-"
-"let g:pymode_rope_lookup_project = 0
-"let g:jedi#usages_command = "<leader>z"
-"let g:jedi#popup_on_dot = 0
-"let g:jedi#popup_select_first = 0
-"" Better navigating through omnicomplete option list
-"" " See
-"" http://stackoverflow.com/questions/2170023/how-to-map-keys-for-popup-menu-in-vim
-"" set completeopt=longest,menuone
-"function! OmniPopup(action)
-"	if pumvisible()
-"		if a:action == 'j'
-"			return "\<C-N>"
-"		elseif a:action == 'k'
-"			return "\<C-P>"
-"		endif
-"	endif
-"	return a:action
-"endfunction
 
-inoremap <silent><C-j> <C-R>=OmniPopup('j')<CR>
-inoremap <silent><C-k> <C-R>=OmniPopup('k')<CR>i
 
 " ctags
 command! MakeTags !ctags -R .
@@ -217,6 +209,12 @@ nnoremap <leader>fg :-1read $HOME/.vim/templates/tex/simplefigure.tex<CR>
 " nerd tree
 nnoremap <Leader>f :NERDTreeToggle<Enter>
 nnoremap <silent> <Leader>v :NERDTreeFind<CR>
-let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
+let NERDTreeShowHidden=1
+let g:NERDTreeWinSize=45
+let g:NERDTreeAutoDeleteBuffer=1
+
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+
 set modifiable
