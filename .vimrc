@@ -12,8 +12,9 @@ Plug 'vim-latex/vim-latex'
 Plug 'wincent/command-t'
 Plug 'tpope/vim-dispatch'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'chriskempson/tomorrow-theme'
+Plug 'chriskempson/base16-vim'
 call plug#end()
-
 " remap leader
 let mapleader = ","
 
@@ -22,11 +23,13 @@ autocmd! BufWritePost .vimrc source
 autocmd! BufWritePost * Neomake
 filetype plugin indent on
 
+set termguicolors
+
 syntax enable
 syntax on
 set background=dark
-colorscheme darcula
-let g:solarized_termtrans = 1
+colorscheme base16-eighties
+
 
 set autoread
 set ttyfast
