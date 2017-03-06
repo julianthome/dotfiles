@@ -5,7 +5,7 @@ Plug 'flazz/vim-colorschemes'
 Plug 'altercation/vim-colors-solarized'
 Plug 'klen/python-mode'
 Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/syntastic'
+Plug 'neomake/neomake'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-latex/vim-latex'
@@ -18,7 +18,8 @@ call plug#end()
 let mapleader = ","
 
 " general
-autocmd! bufwritepost .vimrc source 
+autocmd! BufWritePost .vimrc source
+autocmd! BufWritePost * Neomake
 filetype plugin indent on
 
 syntax enable
