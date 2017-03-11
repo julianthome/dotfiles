@@ -1,5 +1,4 @@
 call plug#begin('~/.vim/plugged')
-Plug 'blueshirts/darcula'
 Plug 'davidhalter/jedi', {'on_ft': 'python'}
 Plug 'flazz/vim-colorschemes'
 Plug 'altercation/vim-colors-solarized'
@@ -11,6 +10,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-latex/vim-latex'
 Plug 'wincent/command-t'
 Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-surround'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'chriskempson/tomorrow-theme'
 Plug 'chriskempson/base16-vim'
@@ -24,16 +24,15 @@ autocmd! BufWritePost .vimrc source
 autocmd! BufWritePost * Neomake
 filetype plugin indent on
 
-"set encoding=utf8
-set termguicolors
+set encoding=utf8
 set termguicolors
 set noshowmode
 filetype on
 syntax enable
 syntax on
 
-"colorscheme base16-eighties
-colorscheme OceanicNext
+colorscheme base16-eighties
+"colorscheme OceanicNext
 set background=dark
 
 let g:vim_markdown_folding_disabled = 1
@@ -220,3 +219,8 @@ let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
 
 set modifiable
+
+
+
+" neomake
+let g:neomake_bundle_maker = { 'exe': 'bundle', 'args': [''] }
