@@ -102,7 +102,7 @@ set mouse=a
 set bs=2
 
 " remap ctrl + [ to escape
-inoremap <c-[> <esc>
+"inoremap <c-[> <esc>
 
 " quicksave
 noremap <c-z> :update<cr>
