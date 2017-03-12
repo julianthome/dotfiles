@@ -160,10 +160,11 @@ let g:Tex_MultipleCompileFormats = 'pdf'
 let g:Tex_DefaultTargetFormat='pdf'
 let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
 
-if has('nvim')
-    let g:vimtex_latexmk_progname = 'nvr'
-    
-endif 
+"if has('nvim')
+"    let g:vimtex_latexmk_progname = 'nvr'
+"    let g:vimtex_view_method = 'Skim'
+"endif 
+
 map <leader>lr :w<CR>:Start! latexmk -f -bibtex -pdf *.main<CR>
 map <leader>lc :w<CR>:Start! latexmk -C<CR>
 
