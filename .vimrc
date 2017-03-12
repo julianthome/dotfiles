@@ -160,13 +160,8 @@ let g:Tex_MultipleCompileFormats = 'pdf'
 let g:Tex_DefaultTargetFormat='pdf'
 let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
 
-"if has('nvim')
-"    let g:vimtex_latexmk_progname = 'nvr'
-"    let g:vimtex_view_method = 'Skim'
-"endif 
-
-map <leader>lr :w<CR>:Start! latexmk -f -bibtex -pdf *.main<CR>
-map <leader>lc :w<CR>:Start! latexmk -C<CR>
+autocmd FileType tex map <leader>lr :w<CR>:Start! latexmk -f -bibtex -pdf *.main<CR>
+autocmd FileType tex map <leader>lc :w<CR>:Start! latexmk -C<CR>
 
 autocmd VimEnter * wincmd p
 
@@ -221,7 +216,6 @@ let g:DevIconsEnableFoldersOpenClose = 1
 
 set modifiable
 
+"asciidoc
+autocmd FileType asciidoc map <leader>lr :w<CR>:Start! asciidoctor -toc *.main -o index.html<CR>
 
-
-" neomake
-let g:neomake_bundle_maker = { 'exe': 'bundle', 'args': [''] }
