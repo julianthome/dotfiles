@@ -18,6 +18,7 @@ Plug 'mhartington/oceanic-next'
 Plug 'jceb/vim-orgmode'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-markdown'
+Plug 'mattn/calendar-vim'
 call plug#end()
 " remap leader
 let mapleader = ","
