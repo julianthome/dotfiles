@@ -15,10 +15,13 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'chriskempson/tomorrow-theme'
 Plug 'chriskempson/base16-vim'
 Plug 'mhartington/oceanic-next'
+Plug 'jceb/vim-orgmode'
+Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-markdown'
 call plug#end()
 " remap leader
 let mapleader = ","
-
+let maplocalleader = ','
 " general
 autocmd! BufWritePost .vimrc source
 autocmd! BufWritePost * Neomake
@@ -218,4 +221,9 @@ set modifiable
 
 "asciidoc
 autocmd FileType asciidoc map <leader>lr :w<CR>:Start! asciidoctor -toc *.main -o index.html<CR>
+autocmd FileType asciidoc map <leader>lv :w<CR>:Start! open index.html<CR>
 
+"markdown
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
+let g:markdown_syntax_conceal = 0
