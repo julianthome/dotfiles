@@ -42,7 +42,9 @@ syntax on
 colorscheme base16-eighties
 "colorscheme OceanicNext
 set background=dark
-
+let g:solarized_termtrans = 1
+" set termcolors to 256 instead of std 16
+let g:solarized_termcolors = 256
 let g:vim_markdown_folding_disabled = 1
 " turn on spelling for markdown files
 autocmd BufRead,BufNewFile *.md setlocal spell complete+=kspell
@@ -72,6 +74,7 @@ set softtabstop=4
 set shiftwidth=4
 set shiftround
 set expandtab
+hi SpellBad guibg=#F08080 guifg=#000000 ctermbg=224 ctermfg=0
 
 " buffers
 set hidden " allow hidden buffers
