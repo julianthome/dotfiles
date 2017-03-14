@@ -260,6 +260,7 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsSnippetsDir="~/.vim/plugged/vim-snippets/UltiSnips"
 let g:UltiSnipsSnippetsDirectories=["~/.vim/plugged/vim-snippets/UltiSnips"]
 let g:UltiSnipsEditSplit="vertical"
+nnoremap <leader>y :UltiSnipsEdit<CR>
 
 if has('nvim')
     let g:deoplete#enable_at_startup = 1
@@ -270,3 +271,5 @@ if executable("rg")
     set grepprg=rg\ --vimgrep\ --no-heading
     set grepformat=%f:%l:%c:%m,%f:%l:%m
 endif
+
+
