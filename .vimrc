@@ -11,7 +11,6 @@ Plug 'vim-latex/vim-latex'
 Plug 'wincent/command-t'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'chriskempson/tomorrow-theme'
 Plug 'chriskempson/base16-vim'
 Plug 'mhartington/oceanic-next'
@@ -19,6 +18,11 @@ Plug 'jceb/vim-orgmode'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-markdown'
 Plug 'mattn/calendar-vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 call plug#end()
 " remap leader
 let mapleader = ","
@@ -195,10 +199,12 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 set guifont=Sauce\ Code\ Pro\ Nerd\ Font\ Complete:h13
 "}}}
 
-
-
 " ctags
 command! MakeTags !ctags -R .
+autocmd BufWritePost *
+      \ if filereadable('tags') |
+      \   call system('ctags -a '.expand('%')) |
+      \ endif
 
 " file search
 set path+=**
@@ -208,8 +214,8 @@ set wildmenu
 nnoremap <leader>fg :-1read $HOME/.vim/templates/tex/simplefigure.tex<CR>
 
 " nerd tree
-nnoremap <Leader>f :NERDTreeToggle<Enter>
-nnoremap <silent> <Leader>v :NERDTreeFind<CR>
+nnoremap <leader>f :NERDTreeToggle<Enter>
+nnoremap <silent> <leader>v :NERDTreeFind<CR>
 let NERDTreeDirArrows = 1
 let NERDTreeShowHidden=1
 let g:NERDTreeWinSize=45
@@ -228,3 +234,22 @@ autocmd FileType asciidoc map <leader>lv :w<CR>:Start! open index.html<CR>
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
 let g:markdown_syntax_conceal = 0
+
+"fuzzy search
+let g:fzf_layout = { 'window': 'enew' }
+nnoremap <leader>q :FZF<CR> 
+nnoremap <leader>g :Commit<CR>
+nnoremap <leader>h :History<CR>
+
+"util snips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsSnippetsDir="~/.vim/plugged/vim-snippets/UltiSnips"
+let g:UltiSnipsSnippetsDirectories=["~/.vim/plugged/vim-snippets/UltiSnips"]
+let g:UltiSnipsEditSplit="vertical"
+
+if has('nvim')
+    let g:deoplete#enable_at_startup = 1
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
