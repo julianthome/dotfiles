@@ -202,9 +202,9 @@ set guifont=Sauce\ Code\ Pro\ Nerd\ Font\ Complete:h13
 " ctags
 command! MakeTags !ctags -R .
 autocmd BufWritePost *
-      \ if filereadable('tags') |
-      \   call system('ctags -a '.expand('%')) |
-      \ endif
+            \ if filereadable('tags') |
+            \   call system('ctags -a '.expand('%')) |
+            \ endif
 
 " file search
 set path+=**
@@ -236,10 +236,22 @@ let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
 let g:markdown_syntax_conceal = 0
 
 "fuzzy search
-let g:fzf_layout = { 'window': 'enew' }
-nnoremap <leader>q :FZF<CR> 
-nnoremap <leader>g :Commit<CR>
-nnoremap <leader>h :History<CR>
+if executable("fzf")
+    let g:fzf_layout = { 'window': 'enew' }
+    let g:fzf_tags_command = 'ctags -R'
+    command! -bang -nargs=* Rg
+                \ call fzf#vim#grep(
+                \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+                \   <bang>0 ? fzf#vim#with_preview('up:60%')
+                \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+                \   <bang>0)
+    nnoremap <leader>q :FZF<CR> 
+    nnoremap <leader>g :Commit<CR>
+    nnoremap <leader>h :History<CR>
+    if executable("rg")
+        nnoremap <leader>r :Rg<CR>
+    endif
+endif
 
 "util snips
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -252,4 +264,9 @@ let g:UltiSnipsEditSplit="vertical"
 if has('nvim')
     let g:deoplete#enable_at_startup = 1
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
+
+if executable("rg")
+    set grepprg=rg\ --vimgrep\ --no-heading
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
 endif
