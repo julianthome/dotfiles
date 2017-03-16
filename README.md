@@ -1,6 +1,6 @@
 # dotfiles
 
-my personal configuration files for
+My personal configuration files
 
 # Remarks
 * For a linux installation, the tmux configuration has
