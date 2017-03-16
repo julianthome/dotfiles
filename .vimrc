@@ -5,7 +5,7 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'klen/python-mode'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
-Plug 'vim-airline/vim-airline'
+
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-latex/vim-latex'
 Plug 'wincent/command-t'
@@ -213,8 +213,7 @@ autocmd BufWritePost *
 set path+=**
 set wildmenu
 
-" simple templates
-nnoremap <leader>fg :-1read $HOME/.vim/templates/tex/simplefigure.tex<CR>
+" nnoremap <leader>fg :-1read $HOME/.vim/templates/tex/simplefigure.tex<CR>
 
 " nerd tree
 nnoremap <leader>f :NERDTreeToggle<Enter>
@@ -249,10 +248,10 @@ if executable("fzf")
                 \           : fzf#vim#with_preview('right:50%:hidden', '?'),
                 \   <bang>0)
     nnoremap <leader>q :FZF<CR> 
-    nnoremap <leader>g :Commit<CR>
+    nnoremap <leader>c :Commit<CR>
     nnoremap <leader>h :History<CR>
     if executable("rg")
-        nnoremap <leader>r :Rg<CR>
+        nnoremap <leader>rg :Rg<CR>
     endif
 endif
 
