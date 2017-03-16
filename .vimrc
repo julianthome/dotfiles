@@ -23,6 +23,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'mbbill/undotree',             { 'on': 'UndotreeToggle'   }
+Plug 'mhinz/vim-signify'
 call plug#end()
 " remap leader
 let mapleader = ","
@@ -120,8 +122,8 @@ vnoremap <c-z> <c-c>:update<cr>
 vnoremap <c-z> <c-o>:update<cr>
 
 " quit
-noremap <leader>e :quit<cr>
-noremap <leader>e :qa!<cr>
+noremap <leader>x :quit<cr>
+noremap <leader>x :qa!<cr>
 
 " windows and tabs
 map <Leader>n <esc>:tabprevious<CR>
@@ -264,14 +266,21 @@ let g:UltiSnipsSnippetsDirectories=["~/.vim/plugged/vim-snippets/UltiSnips"]
 let g:UltiSnipsEditSplit="vertical"
 nnoremap <leader>y :UltiSnipsEdit<CR>
 
+" deoplete 
 if has('nvim')
     let g:deoplete#enable_at_startup = 1
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
+" ripgrep
 if executable("rg")
     set grepprg=rg\ --vimgrep\ --no-heading
     set grepformat=%f:%l:%c:%m,%f:%l:%m
 endif
 
-
+" persistent undo
+if has("persistent_undo")
+    set undodir=~/.undodir/
+    set undofile
+endif
+nnoremap <leader>e :UndotreeToggle<cr>
