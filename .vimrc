@@ -125,8 +125,7 @@ vnoremap <c-z> <c-c>:update<cr>
 vnoremap <c-z> <c-o>:update<cr>
 
 " quit
-noremap <leader>x :quit<cr>
-noremap <leader>x :qa!<cr>
+noremap <leader>x :x<cr>
 
 " windows and tabs
 map <Leader>n <esc>:tabprevious<CR>
