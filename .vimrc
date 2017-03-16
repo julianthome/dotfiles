@@ -5,6 +5,7 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'klen/python-mode'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
+Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-latex/vim-latex'
 Plug 'wincent/command-t'
@@ -26,6 +27,8 @@ Plug 'honza/vim-snippets'
 Plug 'mbbill/undotree',             { 'on': 'UndotreeToggle'   }
 Plug 'mhinz/vim-signify'
 call plug#end()
+
+
 " remap leader
 let mapleader = ","
 let maplocalleader = ','
@@ -179,15 +182,15 @@ autocmd FileType tex map <leader>lc :w<CR>:Start! latexmk -C<CR>
 autocmd VimEnter * wincmd p
 
 " airline
+set laststatus=2
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_left_sep='▶'
-let g:airline_right_sep='◀'
-
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_tab_nr = 1
-"let g:airline_powerline_fonts = 1
-let g:airline_theme='oceanicnext'
-"cnoreabbrev <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
+let g:airline_powerline_fonts = 1
+let g:airline_theme='base16'
+
+
+
 nmap <leader>t :term<cr>
 nmap <leader>, :bnext<CR>
 nmap <leader>. :bprevious<CR>
@@ -249,7 +252,7 @@ if executable("fzf")
                 \   <bang>0 ? fzf#vim#with_preview('up:60%')
                 \           : fzf#vim#with_preview('right:50%:hidden', '?'),
                 \   <bang>0)
-    nnoremap <leader>q :FZF<CR> 
+    nnoremap <c-p> :FZF<CR> 
     nnoremap <leader>c :Commit<CR>
     nnoremap <leader>h :History<CR>
     if executable("rg")
