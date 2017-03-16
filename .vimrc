@@ -5,7 +5,6 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'klen/python-mode'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
-
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-latex/vim-latex'
 Plug 'wincent/command-t'
@@ -17,6 +16,7 @@ Plug 'mhartington/oceanic-next'
 Plug 'jceb/vim-orgmode'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-fugitive'
 Plug 'mattn/calendar-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
