@@ -26,6 +26,8 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'mbbill/undotree',             { 'on': 'UndotreeToggle'   }
 Plug 'mhinz/vim-signify'
+Plug 'junegunn/vim-easy-align'
+Plug 'majutsushi/tagbar'
 call plug#end()
 
 
@@ -286,3 +288,9 @@ if has("persistent_undo")
     set undofile
 endif
 nnoremap <leader>e :UndotreeToggle<cr>
+
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+
+" tagbar
+nmap <leader>tb :TagbarToggle<CR>
