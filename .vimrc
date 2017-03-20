@@ -177,7 +177,7 @@ let g:Tex_MultipleCompileFormats = 'pdf'
 let g:Tex_DefaultTargetFormat='pdf'
 let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
 
-autocmd FileType tex map <leader>lr :w<CR>:Start! latexmk -f -bibtex -pdf *.main<CR>
+autocmd FileType tex map <leader>lr :w<CR>:Start! latexmk -bibtex -pdf *.main<CR>
 autocmd FileType tex map <leader>lc :w<CR>:Start! latexmk -C<CR>
 
 autocmd VimEnter * wincmd p
