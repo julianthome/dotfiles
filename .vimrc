@@ -9,6 +9,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-latex/vim-latex'
 Plug 'wincent/command-t'
+Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
 Plug 'chriskempson/tomorrow-theme'
 Plug 'chriskempson/base16-vim'
@@ -30,25 +31,12 @@ Plug 'majutsushi/tagbar'
 call plug#end()
 
 
-" Neomake
-augroup run_neomake
-  autocmd!
-  autocmd BufReadPost,BufWritePost * Neomake
-augroup END
-let g:neomake_verbose = 1
-let g:neomake_tex_latexmk_maker = {
-    \ 'args': ['-pdf'],
-    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
-    \ }
-let g:neomake_tex_enabled_makers = ['latexmk']
-let g:neomake_latexmkclean_maker = { 'exe': 'latexmk', 'args': ['-C'] }
-
 " remap leader
 let mapleader = ","
 let maplocalleader = ','
-
 " general
 autocmd! BufWritePost .vimrc source
+autocmd! BufWritePost * Neomake
 filetype plugin indent on
 
 set encoding=utf8
@@ -108,6 +96,9 @@ nnoremap <leader>bl :ls<CR>
 " command history
 cnoremap <C-p> <Up> 
 cnoremap <C-n> <Down>
+
+" ,lv to display pdf
+map ,lv <leader>lv
 
 nnoremap <left> <nop>
 nnoremap <right> <nop>
@@ -186,8 +177,8 @@ let g:Tex_MultipleCompileFormats = 'pdf'
 let g:Tex_DefaultTargetFormat='pdf'
 let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
 
-autocmd FileType tex map <leader>lr :w<CR>:Neomake!<CR>
-autocmd FileType tex map <leader>lc :w<CR>:Neomake! latexmkclean<CR>
+autocmd FileType tex map <leader>lr :w<CR>:Start! latexmk -pdf *.main<CR>
+autocmd FileType tex map <leader>lc :w<CR>:Start! latexmk -C<CR>
 
 autocmd VimEnter * wincmd p
 
