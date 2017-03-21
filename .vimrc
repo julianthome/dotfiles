@@ -109,9 +109,6 @@ nnoremap <leader>bl :ls<CR>
 cnoremap <C-p> <Up> 
 cnoremap <C-n> <Down>
 
-" ,lv to display pdf
-map ,lv <leader>lv
-
 nnoremap <left> <nop>
 nnoremap <right> <nop>
 nnoremap <up> <nop>
