@@ -18,6 +18,7 @@ Plug 'jceb/vim-orgmode'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim'
 Plug 'mattn/calendar-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -294,3 +295,8 @@ nmap ga <Plug>(EasyAlign)
 
 " tagbar
 nmap <leader>tb :TagbarToggle<CR>
+
+" gv.vim
+nmap <leader>g :GV<CR>
+nmap <leader>gf :GV?<CR>
+
