@@ -87,6 +87,8 @@ hi SpellBad guibg=#F08080 guifg=#000000 ctermbg=224 ctermfg=0
 " buffers
 set hidden " allow hidden buffers
 
+autocmd BufRead,BufNewFile *.tex syntax spell toplevel
+
 nnoremap <silent> [b :bprevious<CR> 
 nnoremap <silent> ]b :bnext<CR> 
 nnoremap <silent> [B :bfirst<CR> 
