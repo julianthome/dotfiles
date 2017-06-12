@@ -165,13 +165,28 @@ set nobackup
 set nowritebackup
 set noswapfile
 
+" everything reated to latex
 " vim latex
 let g:tex_flavor='latex'
 let g:Tex_TreatMacViewerAsUNIX = 1
 let g:Tex_ExecuteUNIXViewerInForeground = 1
-let g:Tex_ViewRule_ps = 'open -a Skim'
-let g:Tex_ViewRule_pdf = 'open -a Skim'
-let g:Tex_ViewRule_dvi = 'open -a Skim'
+let g:Tex_ViewRule_ps = 'open -a Skim main.pdf'
+let g:Tex_ViewRule_pdf = 'open -a Skim main.pdf'
+let g:Tex_ViewRule_dvi = 'open -a Skim main.pdf'
+
+let g:neomake_rinfo_maker = {
+\ 'exe': 'rubber-info',
+\ 'args': ['main.tex'],
+\ 'append_file': 0,
+\ 'errorformat': '%f:%l: %m,%f:%l-%\d%\+: %m,%f: %m',
+\ }
+
+let g:neomake_rubsync_maker = {
+\ 'exe': 'rubber',
+\ 'args': ['--pdf', '--synctex', '--warn=all', 'main.tex'],
+\ 'append_file': 0,
+\ 'errorformat': '%f:%l: %m,%f: %m',
+\ }
 
 " Change default target to pdf, if not dvi is used
 let g:Tex_DefaultTargetFormat = 'pdf'
@@ -180,8 +195,13 @@ let g:Tex_MultipleCompileFormats = 'pdf'
 let g:Tex_DefaultTargetFormat='pdf'
 let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
 
-autocmd FileType tex map <leader>lr :w<CR>:Dispatch! latexmk -pdf *.main<CR>
-autocmd FileType tex map <leader>lc :w<CR>:Dispatch! latexmk -C<CR>
+"autocmd FileType tex map <leader>lr :w<CR>:Dispatch! latexmk -pdf *.main<CR>
+"autocmd FileType tex map <leader>lc :w<CR>:Dispatch! latexmk -C<CR>
+autocmd FileType tex map <leader>lq :w<CR>:silent !make <CR>:silent !/Applications/Skim.app/Contents/SharedSupport/displayline -r <C-r>=line('.')<CR> %<.pdf %<CR><CR>
+
+"autocmd FileType tex map <leader>lr :w<CR>:NeomakeSh! rubber --pdf --synctex --warn=all main.tex<CR>
+autocmd FileType tex map <leader>lr :w<CR>:Neomake! rubsync<CR>
+autocmd FileType tex map <leader>lc :w<CR>:NeomakeSh! rubber --clean *.tex<CR>
 
 autocmd VimEnter * wincmd p
 
@@ -192,8 +212,6 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='base16'
-
-
 
 nmap <leader>t :term<cr>
 nmap <leader>, :bnext<CR>
