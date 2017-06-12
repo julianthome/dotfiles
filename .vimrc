@@ -7,9 +7,7 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-latex/vim-latex'
 Plug 'wincent/command-t'
-Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
 Plug 'chriskempson/tomorrow-theme'
 Plug 'chriskempson/base16-vim'
@@ -165,14 +163,9 @@ set nobackup
 set nowritebackup
 set noswapfile
 
-" everything reated to latex
-" vim latex
-let g:tex_flavor='latex'
-let g:Tex_TreatMacViewerAsUNIX = 1
-let g:Tex_ExecuteUNIXViewerInForeground = 1
-let g:Tex_ViewRule_ps = 'open -a Skim main.pdf'
-let g:Tex_ViewRule_pdf = 'open -a Skim main.pdf'
-let g:Tex_ViewRule_dvi = 'open -a Skim main.pdf'
+" thanks to https://skyuuka.wordpress.com/2014/07/11/setup-synctex-with-vim-pdflatex-and-skim/
+map ,ls :w<CR>:silent !/Applications/Skim.app/Contents/SharedSupport/displayline -r <C-r>=line('.')<CR> main.pdf %<CR><CR>
+map ,lv :w<CR>:silent !open main.pdf %<CR><CR>
 
 let g:neomake_rinfo_maker = {
 \ 'exe': 'rubber-info',
@@ -188,18 +181,6 @@ let g:neomake_rubsync_maker = {
 \ 'errorformat': '%f:%l: %m,%f: %m',
 \ }
 
-" Change default target to pdf, if not dvi is used
-let g:Tex_DefaultTargetFormat = 'pdf'
-
-let g:Tex_MultipleCompileFormats = 'pdf'
-let g:Tex_DefaultTargetFormat='pdf'
-let g:Tex_CompileRule_pdf = "latexmk -pdflatex='pdflatex -file-line-error -synctex=1 -interaction=nonstopmode' -bibtex -pdf $*"
-
-"autocmd FileType tex map <leader>lr :w<CR>:Dispatch! latexmk -pdf *.main<CR>
-"autocmd FileType tex map <leader>lc :w<CR>:Dispatch! latexmk -C<CR>
-autocmd FileType tex map <leader>lq :w<CR>:silent !make <CR>:silent !/Applications/Skim.app/Contents/SharedSupport/displayline -r <C-r>=line('.')<CR> %<.pdf %<CR><CR>
-
-"autocmd FileType tex map <leader>lr :w<CR>:NeomakeSh! rubber --pdf --synctex --warn=all main.tex<CR>
 autocmd FileType tex map <leader>lr :w<CR>:Neomake! rubsync<CR>
 autocmd FileType tex map <leader>lc :w<CR>:NeomakeSh! rubber --clean *.tex<CR>
 
