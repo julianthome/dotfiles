@@ -27,8 +27,10 @@ Plug 'mbbill/undotree',             { 'on': 'UndotreeToggle'   }
 Plug 'mhinz/vim-signify'
 Plug 'junegunn/vim-easy-align'
 Plug 'majutsushi/tagbar'
+Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesEnable' }
 call plug#end()
 
+autocmd! User indentLine doautocmd indentLine Syntax
 
 " remap leader
 let mapleader = ","
@@ -301,3 +303,7 @@ nmap <leader>tb :TagbarToggle<CR>
 nmap <leader>g :GV<CR>
 nmap <leader>gf :GV?<CR>
 
+" indentline
+autocmd BufRead,BufNewFile * IndentLinesEnable  
+let g:indentLine_color_term = 239
+let g:indentLine_color_gui = '#616161'
