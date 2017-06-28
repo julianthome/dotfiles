@@ -304,6 +304,6 @@ nmap <leader>g :GV<CR>
 nmap <leader>gf :GV?<CR>
 
 " indentline
-autocmd BufRead,BufNewFile * IndentLinesEnable  
-let g:indentLine_color_term = 239
-let g:indentLine_color_gui = '#616161'
+"autocmd BufRead,BufNewFile * IndentLinesEnable  
+"let g:indentLine_color_term = 239
+"let g:indentLine_color_gui = '#616161'
