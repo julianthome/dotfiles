@@ -239,8 +239,7 @@ let g:DevIconsEnableFoldersOpenClose = 1
 set modifiable
 
 "asciidoc
-autocmd FileType asciidoc map <leader>lr :w<CR>:Start! asciidoctor -toc *.main -o index.html<CR>
-autocmd FileType asciidoc map <leader>lv :w<CR>:Start! open index.html<CR>
+autocmd FileType asciidoc map <leader>lr :w<CR>:NeomakeSh! asciidoctor -toc *.main -o index.html<CR>
 
 "markdown
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
