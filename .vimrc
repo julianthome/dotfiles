@@ -9,6 +9,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'wincent/command-t'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-ragtag'
+Plug 'tpope/vim-unimpaired'
 Plug 'chriskempson/tomorrow-theme'
 Plug 'chriskempson/base16-vim'
 Plug 'mhartington/oceanic-next'
@@ -306,3 +308,7 @@ nmap <leader>gf :GV?<CR>
 "autocmd BufRead,BufNewFile * IndentLinesEnable  
 "let g:indentLine_color_term = 239
 "let g:indentLine_color_gui = '#616161'
+"
+
+" ragtag -- enable ragtag for all sorts of filetypes
+autocmd BufReadPost * call RagtagInit()
