@@ -311,4 +311,4 @@ nmap <leader>gf :GV?<CR>
 "
 
 " ragtag -- enable ragtag for all sorts of filetypes
-autocmd BufReadPost * call RagtagInit()
+autocmd BufEnter * call RagtagInit()
