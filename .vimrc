@@ -32,11 +32,12 @@ Plug 'majutsushi/tagbar'
 Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesEnable' }
 call plug#end()
 
-autocmd! User indentLine doautocmd indentLine Syntax
+" autocmd! User indentLine doautocmd indentLine Syntax
 
 " remap leader
 let mapleader = ","
 let maplocalleader = ','
+
 " general
 autocmd! BufWritePost .vimrc source
 autocmd! BufWritePost * Neomake
@@ -45,7 +46,7 @@ filetype plugin indent on
 set encoding=utf8
 set termguicolors
 set noshowmode
-filetype on
+
 syntax enable
 syntax on
 
@@ -67,11 +68,8 @@ let g:instant_markdown_autostart = 0
 set autoread
 set ttyfast
 set spell
-set nu
 set hlsearch
 set backspace=2
-set number
-set rnu
 set tw=79
 set nowrap " no wrap on load
 set fo-=t " no wrap while typing
@@ -84,11 +82,19 @@ set softtabstop=4
 set shiftwidth=4
 set shiftround
 set expandtab
+set nu
+set rnu
 hi SpellBad guibg=#F08080 guifg=#000000 ctermbg=224 ctermfg=0
 
 " buffers
 set hidden " allow hidden buffers
 
+" used for buffers created through fzf
+autocmd TermOpen * set rnu
+autocmd BufNew * set rnu
+
+" required for multi-file projects
+autocmd BufRead,BufNew,BufNewFile *.tex set ft=tex
 autocmd BufRead,BufNew,BufNewFile *.tex syntax spell toplevel
 
 nnoremap <silent> [b :bprevious<CR> 
@@ -264,6 +270,16 @@ if executable("fzf")
     if executable("rg")
         nnoremap <leader>rg :Rg<CR>
     endif
+
+function! s:fzf_statusline()
+  " Override statusline as you like
+  highlight fzf1 ctermfg=161 ctermbg=251
+  highlight fzf2 ctermfg=23 ctermbg=251
+  highlight fzf3 ctermfg=237 ctermbg=251
+  setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
+endfunction
+
+autocmd! User FzfStatusLine call <SID>fzf_statusline()
 endif
 
 "util snips
