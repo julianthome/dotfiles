@@ -248,6 +248,7 @@ set modifiable
 
 "asciidoc
 autocmd FileType asciidoc map <leader>lr :w<CR>:NeomakeSh! asciidoctor -toc *.main -o index.html<CR>
+autocmd FileType asciidoc map <leader>ls :w<CR>:NeomakeSh! open index.html<CR>
 
 "markdown
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
