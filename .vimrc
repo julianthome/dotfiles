@@ -89,10 +89,6 @@ hi SpellBad guibg=#F08080 guifg=#000000 ctermbg=224 ctermfg=0
 " buffers
 set hidden " allow hidden buffers
 
-" used for buffers created through fzf
-autocmd TermOpen * set rnu
-autocmd BufNew * set rnu
-
 " required for multi-file projects
 autocmd BufRead,BufNew,BufNewFile *.tex set ft=tex
 autocmd BufRead,BufNew,BufNewFile *.tex syntax spell toplevel
@@ -257,6 +253,8 @@ let g:markdown_syntax_conceal = 0
 
 "fuzzy search
 if executable("fzf")
+    autocmd BufNew * set rnu
+    autocmd TermOpen * set rnu
     let g:fzf_layout = { 'window': 'enew' }
     let g:fzf_tags_command = 'ctags -R'
     command! -bang -nargs=* Rg
