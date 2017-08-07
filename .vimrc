@@ -49,8 +49,8 @@ set noshowmode
 
 syntax enable
 syntax on
-
-colorscheme base16-eighties
+let base16colorspace=256 
+colorscheme base16-solar-flare
 "colorscheme OceanicNext
 set background=dark
 let g:solarized_termtrans = 1
@@ -292,7 +292,7 @@ nnoremap <leader>y :UltiSnipsEdit<CR>
 
 " deoplete 
 if has('nvim')
-    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#enable_at_startup = 0
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 
