@@ -50,7 +50,7 @@ set noshowmode
 syntax enable
 syntax on
 let base16colorspace=256 
-colorscheme base16-railscasts
+colorscheme base16-oceanicnext
 "colorscheme OceanicNext
 set background=dark
 let g:solarized_termtrans = 1
