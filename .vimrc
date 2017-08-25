@@ -198,7 +198,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline_powerline_fonts = 1
-let g:airline_theme='base16'
+let g:airline_theme='minimalist'
 
 nmap <leader>t :term<cr>
 nmap <leader>, :bnext<CR>
