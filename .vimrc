@@ -7,11 +7,9 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'wincent/command-t'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-ragtag'
 Plug 'tpope/vim-unimpaired'
-Plug 'chriskempson/tomorrow-theme'
 Plug 'chriskempson/base16-vim'
 Plug 'mhartington/oceanic-next'
 Plug 'jceb/vim-orgmode'
@@ -19,6 +17,7 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
+Plug 'junegunn/seoul256.vim'
 Plug 'mattn/calendar-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -49,10 +48,11 @@ set noshowmode
 
 syntax enable
 syntax on
+
+let g:seoul256_background = 235
+colo seoul256
+
 let base16colorspace=256 
-colorscheme base16-railscasts
-"colorscheme OceanicNext
-set background=dark
 let g:solarized_termtrans = 1
 " set termcolors to 256 instead of std 16
 let g:solarized_termcolors = 256

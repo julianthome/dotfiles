@@ -10,3 +10,6 @@
 [submodule "base16-iterm2"]
 	path = base16-iterm2
 	url = https://github.com/chriskempson/base16-iterm2.git
+[submodule "seoul256.vim"]
+	path = seoul256.vim
+	url = https://github.com/junegunn/seoul256.vim
