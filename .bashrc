@@ -41,3 +41,4 @@ alias ll='ls -l'
 alias vi='vim'
 alias tmux="tmux -2"
 
+alias glog="git log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
