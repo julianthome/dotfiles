@@ -6,7 +6,7 @@ Plug 'klen/python-mode'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'julianthome/vim-airline-themes'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-ragtag'
@@ -49,6 +49,7 @@ set noshowmode
 
 syntax enable
 syntax on
+set guifont=Source\ Code\ Pro\ Light:11
 
 let g:seoul256_background = 235
 colo seoul256
@@ -64,7 +65,6 @@ autocmd BufRead,BufNewFile *.md setlocal spell complete+=kspell
 autocmd BufRead,BufNewFile *.md hi SpellBad guibg=#ff2929 guifg=#ffffff" ctermbg=224
 " disable markdown auto-preview. Gets annoying
 let g:instant_markdown_autostart = 0
-
 
 set autoread
 set ttyfast
@@ -199,22 +199,24 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline_powerline_fonts = 1
-let g:airline_theme='minimalist'
-
-nmap <leader>t :term<cr>
-nmap <leader>, :bnext<CR>
-nmap <leader>. :bprevious<CR>
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
-set guifont=Sauce\ Code\ Pro\ Nerd\ Font\ Complete:h13
+let g:airline_theme='jtminimalist'
+let g:airline#extensions#wordcount#format = '%d words'
+let g:airline#extensions#wordcount#enabled = 1
+let g:airline_mode_map = {
+    \ '__' : '-',
+    \ 'n'  : 'N',
+    \ 'i'  : 'I',
+    \ 'R'  : 'R',
+    \ 'c'  : 'C',
+    \ 'v'  : 'V',
+    \ 'V'  : 'V',
+    \ '' : 'V',
+    \ 's'  : 'S',
+    \ }
+let g:airline_section_z = '%3p%% %3l/%L:%3v'
+let g:airline_section_y = ''
+let g:webdevicons_enable_airline_statusline_fileformat_symbols = 0
+let g:airline_extensions = []
 "}}}
 
 " ctags
