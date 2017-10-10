@@ -215,8 +215,20 @@ let g:airline_mode_map = {
     \ }
 let g:airline_section_z = '%3p%% %3l/%L:%3v'
 let g:airline_section_y = ''
-let g:webdevicons_enable_airline_statusline_fileformat_symbols = 0
-let g:airline_extensions = []
+
+nmap <leader>t :term<cr>
+nmap <leader>, :bnext<CR>
+nmap <leader>. :bprevious<CR>
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
 "}}}
 
 " ctags
@@ -263,7 +275,7 @@ if executable("fzf")
     command! -bang -nargs=* Rg
                 \ call fzf#vim#grep(
                 \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-                \   <bang>0 ? fzf#vim#with_preview('up:60%')
+                \   <bang>0 ? fzf#vim#with_preview('up:40%')
                 \           : fzf#vim#with_preview('right:50%:hidden', '?'),
                 \   <bang>0)
     nnoremap <c-p> :FZF<CR> 
