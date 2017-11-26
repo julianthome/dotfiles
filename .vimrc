@@ -275,7 +275,7 @@ if executable("fzf")
     command! -bang -nargs=* Rg
                 \ call fzf#vim#grep(
                 \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-                \   <bang>0 ? fzf#vim#with_preview('up:40%')
+                \   <bang>0 ? fzf#vim#with_preview('up:60%')
                 \           : fzf#vim#with_preview('right:50%:hidden', '?'),
                 \   <bang>0)
     nnoremap <c-p> :FZF<CR> 
@@ -297,13 +297,13 @@ autocmd! User FzfStatusLine call <SID>fzf_statusline()
 endif
 
 "util snips
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-let g:UltiSnipsSnippetsDir="~/.vim/plugged/vim-snippets/UltiSnips"
-let g:UltiSnipsSnippetsDirectories=["~/.vim/plugged/vim-snippets/UltiSnips"]
-let g:UltiSnipsEditSplit="vertical"
-nnoremap <leader>y :UltiSnipsEdit<CR>
+"let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsJumpForwardTrigger="<c-b>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"let g:UltiSnipsSnippetsDir="~/.vim/plugged/vim-snippets/UltiSnips"
+"let g:UltiSnipsSnippetsDirectories=["~/.vim/plugged/vim-snippets/UltiSnips"]
+"let g:UltiSnipsEditSplit="vertical"
+"nnoremap <leader>y :UltiSnipsEdit<CR>
 
 " deoplete 
 if has('nvim')
