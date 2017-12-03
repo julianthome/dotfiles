@@ -1,11 +1,13 @@
 call plug#begin('~/.vim/plugged')
 Plug 'davidhalter/jedi', {'on_ft': 'python'}
+" Plug 'yuttie/hydrangea-vim',
 Plug 'flazz/vim-colorschemes'
 Plug 'altercation/vim-colors-solarized'
 Plug 'klen/python-mode'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
 Plug 'vim-airline/vim-airline'
+"Plug 'https://github.com/itchyny/lightline.vim'
 Plug 'julianthome/vim-airline-themes'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -192,6 +194,16 @@ autocmd FileType tex map <leader>lr :w<CR>:Neomake! rubsync<CR>
 autocmd FileType tex map <leader>lc :w<CR>:NeomakeSh! rubber --clean *.tex<CR>
 
 autocmd VimEnter * wincmd p
+
+" lightline
+let g:lightline = {
+      \ 'colorscheme': 'hydrangea',
+      \ 'component': {
+      \   'readonly': '%{&readonly?"":""}',
+      \ },
+      \ 'separator':    { 'left': '', 'right': '' },
+      \ 'subseparator': { 'left': '', 'right': '' },
+      \ }
 
 " airline
 set laststatus=2
