@@ -202,7 +202,6 @@ let g:lightline = {
     \   'left': [ [ 'bufferinfo' ],
     \             [ 'separator' ],
     \             [ 'bufferbefore', 'buffercurrent', 'bufferafter' ], ],
-    \   'right': [ [ 'close' ], ],
     \ },
     \ 'component_expand': {
     \   'buffercurrent': 'lightline#buffer#buffercurrent',
@@ -220,11 +219,12 @@ let g:lightline = {
     \ 'component': {
     \   'separator': '',
     \ },
-    \ 'separator':    { 'left': '', 'right': '' },
-    \ 'subseparator': { 'left': '|', 'right': '|' },
+    \ 'separator':    { 'left': '║', 'right': '║' },
+    \ 'subseparator': { 'left': '○', 'right': '○' },
+    \ 'tabline_separator': { 'left' : '', 'right' : '' },
     \ }
 
-let g:lightline_buffer_logo = ' '
+let g:lightline_buffer_logo = '♞ '
 let g:lightline_buffer_readonly_icon = ''
 let g:lightline_buffer_modified_icon = '✭'
 let g:lightline_buffer_git_icon = ' '
@@ -246,6 +246,19 @@ let g:lightline_buffer_maxfextlen = 3
 let g:lightline_buffer_minflen = 16
 let g:lightline_buffer_minfextlen = 3
 let g:lightline_buffer_reservelen = 20
+let g:lightline.mode_map = {
+    \ 'n' : 'N',
+    \ 'i' : 'I',
+    \ 'R' : 'R',
+    \ 'v' : 'V',
+    \ 'V' : 'V-L',
+    \ "\<C-v>": 'V-B',
+    \ 'c' : 'C',
+    \ 's' : 'S',
+    \ 'S' : 'S-L',
+    \ "\<C-s>": 'S-B',
+    \ 't': 'T',
+    \ }
 
 " ctags
 command! MakeTags !ctags -R .
@@ -313,13 +326,13 @@ autocmd! User FzfStatusLine call <SID>fzf_statusline()
 endif
 
 "util snips
-"let g:UltiSnipsExpandTrigger="<tab>"
-"let g:UltiSnipsJumpForwardTrigger="<c-b>"
-"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-"let g:UltiSnipsSnippetsDir="~/.vim/plugged/vim-snippets/UltiSnips"
-"let g:UltiSnipsSnippetsDirectories=["~/.vim/plugged/vim-snippets/UltiSnips"]
-"let g:UltiSnipsEditSplit="vertical"
-"nnoremap <leader>y :UltiSnipsEdit<CR>
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsSnippetsDir="~/.vim/plugged/vim-snippets/UltiSnips"
+let g:UltiSnipsSnippetsDirectories=["~/.vim/plugged/vim-snippets/UltiSnips"]
+let g:UltiSnipsEditSplit="vertical"
+nnoremap <leader>y :UltiSnipsEdit<CR>
 
 " deoplete 
 if has('nvim')
