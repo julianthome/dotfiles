@@ -219,12 +219,12 @@ let g:lightline = {
     \ 'component': {
     \   'separator': '',
     \ },
-    \ 'separator':    { 'left': '║', 'right': '║' },
-    \ 'subseparator': { 'left': '○', 'right': '○' },
+    \ 'separator':    { 'left': '', 'right': '' },
+    \ 'subseparator': { 'left': '|', 'right': '|' },
     \ 'tabline_separator': { 'left' : '', 'right' : '' },
     \ }
 
-let g:lightline_buffer_logo = '♞ '
+let g:lightline_buffer_logo = '☯ '
 let g:lightline_buffer_readonly_icon = ''
 let g:lightline_buffer_modified_icon = '✭'
 let g:lightline_buffer_git_icon = ' '
@@ -247,16 +247,16 @@ let g:lightline_buffer_minflen = 16
 let g:lightline_buffer_minfextlen = 3
 let g:lightline_buffer_reservelen = 20
 let g:lightline.mode_map = {
-    \ 'n' : 'N',
-    \ 'i' : 'I',
-    \ 'R' : 'R',
-    \ 'v' : 'V',
-    \ 'V' : 'V-L',
-    \ "\<C-v>": 'V-B',
-    \ 'c' : 'C',
-    \ 's' : 'S',
-    \ 'S' : 'S-L',
-    \ "\<C-s>": 'S-B',
+    \ 'n' : '𝒩 ',
+    \ 'i' : 'ℐ ',
+    \ 'R' : 'ℛ ',
+    \ 'v' : '𝒱 ',
+    \ 'V' : '𝒱-ℒ ',
+    \ "\<C-v>": '𝒱-ℬ ',
+    \ 'c' : '𝒞 ',
+    \ 's' : '𝒮 ',
+    \ 'S' : '𝒮-ℒ ',
+    \ "\<C-s>": '𝒮-ℬ ',
     \ 't': 'T',
     \ }
 
