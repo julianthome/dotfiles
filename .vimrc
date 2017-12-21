@@ -50,7 +50,6 @@ set noshowmode
 
 syntax enable
 syntax on
-set guifont=Source\ Code\ Pro\ Light:11
 
 let g:seoul256_background = 235
 colo seoul256
@@ -247,17 +246,17 @@ let g:lightline_buffer_minflen = 16
 let g:lightline_buffer_minfextlen = 3
 let g:lightline_buffer_reservelen = 20
 let g:lightline.mode_map = {
-    \ 'n' : '𝒩 ',
-    \ 'i' : 'ℐ ',
-    \ 'R' : 'ℛ ',
-    \ 'v' : '𝒱 ',
-    \ 'V' : '𝒱-ℒ ',
-    \ "\<C-v>": '𝒱-ℬ ',
-    \ 'c' : '𝒞 ',
-    \ 's' : '𝒮 ',
-    \ 'S' : '𝒮-ℒ ',
-    \ "\<C-s>": '𝒮-ℬ ',
-    \ 't': 'T',
+    \ 'n' : '𝒏',
+    \ 'i' : '𝒊',
+    \ 'R' : '𝒓',
+    \ 'v' : '𝒗',
+    \ 'V' : '𝒗-𝒍',
+    \ "\<C-v>": '𝒗-𝒃',
+    \ 'c' : '𝒄',
+    \ 's' : '𝒔',
+    \ 'S' : '𝒔-𝒍',
+    \ "\<C-s>": '𝒔-𝒃',
+    \ 't': '𝒕',
     \ }
 
 " ctags
