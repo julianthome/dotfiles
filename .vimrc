@@ -6,7 +6,7 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'klen/python-mode'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
-Plug 'https://github.com/itchyny/lightline.vim'
+Plug 'itchyny/lightline.vim'
 Plug 'taohex/lightline-buffer'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
