@@ -171,7 +171,7 @@ set nowritebackup
 set noswapfile
 
 " thanks to https://skyuuka.wordpress.com/2014/07/11/setup-synctex-with-vim-pdflatex-and-skim/
-map ,ls :w<CR>:silent !/Applications/Skim.app/Contents/SharedSupport/displayline -r <C-r>=line('.')<CR> main.pdf %<CR><CR>
+map ,ls :w<CR>:silent !/Applications/Skim.app/Contents/SharedSupport/displayline -b -g -r <C-r>=line('.')<CR> main.pdf %<CR><CR>
 map ,lv :w<CR>:silent !open main.pdf %<CR><CR>
 
 let g:neomake_rinfo_maker = {
@@ -188,7 +188,17 @@ let g:neomake_rubsync_maker = {
 \ 'errorformat': '%f:%l: %m,%f: %m',
 \ }
 
-autocmd FileType tex map <leader>lr :w<CR>:Neomake! rubsync<CR>
+
+let g:neomake_latexsync_maker = {
+\ 'exe': 'latexmk',
+\ 'args': ['main'],
+\ 'append_file': 0,
+\ 'errorformat': '%E%f:%l: %m'
+\ }
+
+
+"autocmd FileType tex map <leader>lr :w<CR>:Neomake! rubsync<CR>
+autocmd FileType tex map <leader>lr :w<CR>:Neomake! latexsync<CR>
 autocmd FileType tex map <leader>lc :w<CR>:NeomakeSh! rubber --clean *.tex<CR>
 
 autocmd VimEnter * wincmd p

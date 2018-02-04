@@ -19,3 +19,12 @@
 [submodule ".emacs.d/evil"]
 	path = .emacs.d/evil
 	url = https://github.com/emacs-evil/evil
+[submodule ".emacs.d/powerline-evil"]
+	path = .emacs.d/powerline-evil
+	url = https://github.com/raugturi/powerline-evil
+[submodule ".emacs.d/powerline"]
+	path = .emacs.d/powerline
+	url = https://github.com/milkypostman/powerline
+[submodule ".emacs.d/telephone-line"]
+	path = .emacs.d/telephone-line
+	url = https://github.com/dbordak/telephone-line
