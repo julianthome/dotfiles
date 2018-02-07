@@ -1,0 +1,306 @@
+* Base configuration
+
+Base editor configuration command
+
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+(setq save-place-file "~/.emacs.d/saveplace")
+(setq-default save-place t)
+(require 'saveplace)
+(global-hl-line-mode 1)
+(setq inhibit-startup-screen t)
+; always follow symlinks
+(setq vc-follow-symlinks nil)
+; always set safe variables and ignore the others
+(setq enable-local-variables :safe)
+;(global-linum-mode 1)
+;(setq linum-format "%4d \u2502 ")
+
+;; ITERM2 MOUSE SUPPORT
+    (unless window-system
+      (require 'mouse)
+      (xterm-mouse-mode t)
+      (defun track-mouse (e)) 
+      (setq mouse-sel-mode t)
+    )
+#+END_SRC
+
+* Melpa
+
+Setup emacs package manager
+
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+(package-initialize)
+#+END_SRC
+
+* Setup Local Workspace
+** Remote Packages
+#+BEGIN_SRC emacs-lisp
+(setq package-list '(helm evil key-chord smart-mode-line seoul256-theme nlinum-relative fill-column-indicator general hydra smart-mode-line-powerline-theme tabbar auctex flycheck exec-path-from-shell neotree))
+; activate all the packages (in particular autoloads)
+(package-initialize)
+
+; fetch the list of packages available 
+(unless package-archive-contents
+  (package-refresh-contents))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+#+END_SRC
+
+** Local Packages
+#+BEGIN_SRC emacs-lisp
+(setq seoul256-background 235)
+(load-theme 'seoul256 t)
+;; These two lines are just examples
+(setq powerline-arrow-shape 'curve)
+(setq powerline-default-separator-dir '(right . left))
+;; These two lines you really need.
+(setq sml/theme 'dark)
+(setq sml/no-confirm-load-theme t)
+
+(sml/setup)
+#+END_SRC
+
+
+
+** Package Configuration
+
+
+*** AucTex
+#+BEGIN_SRC emacs-lisp
+;; AucTeX
+;; AucTeX
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+(setq TeX-PDF-mode t)
+ 
+;; make latexmk available via C-c C-c
+;; Note: SyncTeX is setup via ~/.latexmkrc (see below)
+;;(add-hook 'LaTeX-mode-hook (lambda ()
+;;  (push
+;;    '("latexmk" "rubber --pdf --synctex --warn=all %s" TeX-run-TeX nil t
+;;      :help "Run latexmk on file")
+;;    TeX-command-list)))
+;;(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+
+;; use Skim as default pdf viewer
+;; Skim's displayline is used for forward search (from .tex to .pdf)
+;; option -b highlights the current line; option -g opens Skim in the background  
+(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+(setq TeX-view-program-list
+     '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+
+(add-hook 'TeX-mode-hook 'reftex-mode)
+(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+(setq TeX-source-correlate-method 'synctex)
+(server-start) 
+#+END_SRC
+
+*** NeoTree
+
+#+BEGIN_SRC emacs-lisp
+(require 'neotree)
+#+END_SRC
+
+*** Evil Mode
+
+#+BEGIN_SRC emacs-lisp
+(require 'key-chord)
+(require 'evil)
+(require 'hydra)
+(evil-mode 1)
+(require 'general)
+(general-evil-setup)
+(key-chord-mode 1)
+(define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+(define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
+(define-key evil-insert-state-map (kbd "ESC") 'evil-normal-state)
+(general-nmap "Q" (general-simulate-key "gqap"))
+(general-vmap "Q" (general-simulate-key "gq"))
+
+(key-chord-define evil-normal-state-map ",," 'evil-force-normal-state)
+(key-chord-define evil-visual-state-map ",," 'evil-change-to-previous-state)
+(key-chord-define evil-insert-state-map ",," 'evil-normal-state)
+(key-chord-define evil-replace-state-map ",," 'evil-normal-state)
+
+(key-chord-define evil-normal-state-map "ee" 'evil-emacs-state)
+(key-chord-define evil-insert-state-map "ee" 'evil-emacs-state)
+(key-chord-define evil-emacs-state-map "ee" 'evil-normal-state)
+
+(defvar my-leader-map (make-sparse-keymap)
+  "Keymap for \"leader key\" shortcuts.")
+(define-key evil-normal-state-map "," my-leader-map)
+;; binding ",b"
+;; (define-key my-leader-map "b" 'list-buffers)
+
+
+(defun my-run-latex ()
+  (interactive)
+  (TeX-save-document (TeX-master-file))
+  (TeX-command "LaTeX" 'TeX-master-file -1))
+
+
+
+(define-key my-leader-map "lr" 'my-run-latex)
+(define-key my-leader-map "ls" 'TeX-view)
+
+;; change the "leader" key to space
+;; (define-key evil-normal-state-map "," 'evil-repeat-find-char-reverse)
+;; (define-key evil-normal-state-map (kbd "SPC") my-leader-map)
+
+(defun close-and-kill-this-pane ()
+      "If there are multiple windows, then close this pane and kill the buffer in it also."
+      (interactive)
+      (kill-this-buffer)
+      (if (not (one-window-p))
+          (delete-window)))
+
+(define-key my-leader-map "bd" 'close-and-kill-this-pane)
+(define-key my-leader-map "x" 'save-buffers-kill-emacs)
+(define-key my-leader-map "f" 'neotree-toggle)
+
+#+END_SRC
+
+*** column indicator
+#+BEGIN_SRC emacs-lisp
+(require 'fill-column-indicator)
+(setq fci-rule-width 1)
+(setq fci-rule-column 80)
+(add-hook 'after-change-major-mode-hook 'fci-mode)
+(setq fci-rule-color "#a4adbc")
+(setq fci-rule-character ?\u2502)
+#+END_SRC
+
+*** nlinum
+#+BEGIN_SRC emacs-lisp
+(require 'nlinum-relative)
+(nlinum-relative-setup-evil)                    ;; setup for evil
+(add-hook 'prog-mode-hook 'nlinum-relative-mode)
+(setq nlinum-relative-redisplay-delay 0)      ;; delay
+(setq nlinum-relative-current-symbol "")      ;; or "" for display current line number
+(setq nlinum-relative-offset 0)                 ;; 1 if you want 0, 2, 3...
+(global-nlinum-relative-mode)
+(setq nlinum-format "%4d \u2502 ")
+(setq nlinum-highlight-current-line 1)
+#+END_SRC
+
+
+*** Powerline
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+
+*** Helm
+#+BEGIN_SRC emacs-lisp
+(require 'helm)
+(setq helm-for-files-preferred-list '(helm-source-buffers-list
+                                      helm-source-buffer-not-found
+                                      helm-source-recentf
+                                      helm-source-bookmarks
+                                      helm-source-file-cache
+                                      helm-source-files-in-current-dir
+                                      ))
+
+(define-key evil-normal-state-map (kbd "C-p") 'helm-multi-files)
+
+(define-key helm-map (kbd "C-j") 'helm-next-line)
+(define-key helm-map (kbd "C-k") 'helm-previous-line)
+#+END_SRC
+
+*** Flycheck
+#+BEGIN_SRC emacs-lisp
+(package-install 'flycheck)
+(global-flycheck-mode)
+(exec-path-from-shell-initialize)
+#+END_SRC
+
+
+
+*** Tabbar
+#+BEGIN_SRC emacs-lisp
+;; Tabbar
+(require 'tabbar)
+
+(tabbar-mode 1)
+;; Tabbar settings
+(set-face-attribute
+ 'tabbar-default nil
+ :background "gray20"
+ :foreground "gray20"
+ :box '(:line-width 1 :color "gray20" :style nil))
+(set-face-attribute
+ 'tabbar-unselected nil
+ :background "gray30"
+ :foreground "white"
+ :box '(:line-width 5 :color "gray30" :style nil))
+(set-face-attribute
+ 'tabbar-selected nil
+ :background "gray75"
+ :foreground "black"
+ :box '(:line-width 5 :color "gray75" :style nil))
+(set-face-attribute
+ 'tabbar-highlight nil
+ :background "white"
+ :foreground "black"
+ :underline nil
+ :box '(:line-width 5 :color "white" :style nil))
+(set-face-attribute
+ 'tabbar-button nil
+ :box '(:line-width 1 :color "gray20" :style nil))
+(set-face-attribute
+ 'tabbar-separator nil
+ :background "gray20"
+ :height 0.6)
+
+;; Change padding of the tabs
+;; we also need to set separator to avoid overlapping tabs by highlighted tabs
+(custom-set-variables
+ '(tabbar-separator (quote (0.5))))
+;; adding spaces
+(defun tabbar-buffer-tab-label (tab)
+  "Return a label for TAB.
+That is, a string used to represent it on the tab bar."
+  (let ((label  (if tabbar--buffer-show-groups
+                    (format "[%s]  " (tabbar-tab-tabset tab))
+                  (format "%s  " (tabbar-tab-value tab)))))
+    ;; Unless the tab bar auto scrolls to keep the selected tab
+    ;; visible, shorten the tab label to keep as many tabs as possible
+    ;; in the visible area of the tab bar.
+    (if tabbar-auto-scroll-flag
+        label
+      (tabbar-shorten
+       label (max 1 (/ (window-width)
+                       (length (tabbar-view
+                                (tabbar-current-tabset)))))))))
+
+
+; turn on the tabbar
+(define-key evil-normal-state-map "]b" 'tabbar-forward-tab)
+(define-key evil-normal-state-map "[b" 'tabbar-backward-tab)
+
+#+END_SRC
+
+
+
