@@ -5,6 +5,7 @@ Base editor configuration command
 #+BEGIN_SRC emacs-lisp
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+(scroll-bar-mode -1)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (setq save-place-file "~/.emacs.d/saveplace")
@@ -16,8 +17,6 @@ Base editor configuration command
 (setq vc-follow-symlinks nil)
 ; always set safe variables and ignore the others
 (setq enable-local-variables :safe)
-;(global-linum-mode 1)
-;(setq linum-format "%4d \u2502 ")
 
 ;; ITERM2 MOUSE SUPPORT
     (unless window-system
@@ -26,6 +25,32 @@ Base editor configuration command
       (defun track-mouse (e)) 
       (setq mouse-sel-mode t)
     )
+
+
+;; backwards compatibility as default-buffer-file-coding-system
+;; is deprecated in 23.2.
+(if (boundp 'buffer-file-coding-system)
+    (setq-default buffer-file-coding-system 'utf-8)
+  (setq default-buffer-file-coding-system 'utf-8))
+
+;; Treat clipboard input as UTF-8 string first; compound text next, etc.
+;;(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+(set-default-font "Source Code Pro 16")
+
+;; ausgewählten Text bei Eingabe löschen
+(delete-selection-mode 1) 
+
+;; keine "yes-or-no"-Fragen - "y-or-n" reicht aus
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; Zusammengehörende Klammern hervorheben
+(show-paren-mode 1)
+;; Text zwischen den Klammern nicht hervorheben
+(setq show-paren-style 'parenthesis)
+
+;; Aktuelle Spaltennummer in der Mode Line anzeigen
+(column-number-mode nil)
+;;(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-16"))
 #+END_SRC
 
 * Melpa
@@ -33,23 +58,20 @@ Base editor configuration command
 Setup emacs package manager
 
 #+BEGIN_SRC emacs-lisp
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(package-initialize)
-#+END_SRC
 
-* Setup Local Workspace
-** Remote Packages
-#+BEGIN_SRC emacs-lisp
-(setq package-list '(helm evil key-chord smart-mode-line seoul256-theme nlinum-relative fill-column-indicator general hydra smart-mode-line-powerline-theme tabbar auctex flycheck exec-path-from-shell neotree))
+
+(setq package-list '(helm evil key-chord doom-themes fill-column-indicator general hydra tabbar auctex flycheck exec-path-from-shell neotree auctex-latexmk org-bullets powerline airline-themes solarized-theme helm-bibtex))
+
+; list the repositories containing them
+
+  (setq package-archives
+        '(("marmalade"   . "http://marmalade-repo.org/packages/")
+          ("gnu"         . "http://elpa.gnu.org/packages/")
+          ("org"         . "http://orgmode.org/elpa/")
+          ("melpa"       . "https://melpa.org/packages/")
+          ("melpa-stable" . "https://stable.melpa.org/packages/")))
+
+
 ; activate all the packages (in particular autoloads)
 (package-initialize)
 
@@ -61,27 +83,33 @@ Setup emacs package manager
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
-
 #+END_SRC
 
+* Setup Local Workspace
 ** Local Packages
 #+BEGIN_SRC emacs-lisp
-(setq seoul256-background 235)
-(load-theme 'seoul256 t)
+;;(setq seoul256-background 235)
+;;(load-theme 'seoul256 t)
 ;; These two lines are just examples
-(setq powerline-arrow-shape 'curve)
-(setq powerline-default-separator-dir '(right . left))
+;;(setq powerline-arrow-shape 'curve)
+;;(setq powerline-default-separator-dir '(right . left))
 ;; These two lines you really need.
-(setq sml/theme 'dark)
-(setq sml/no-confirm-load-theme t)
+;;(setq sml/theme 'dark)
+;;(setq sml/no-confirm-load-theme t)
 
-(sml/setup)
+;;(sml/setup)
 #+END_SRC
 
 
 
 ** Package Configuration
 
+*** Org mode
+#+BEGIN_SRC emacs-lisp
+(require 'org)
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+END_SRC
 
 *** AucTex
 #+BEGIN_SRC emacs-lisp
@@ -99,12 +127,12 @@ Setup emacs package manager
  
 ;; make latexmk available via C-c C-c
 ;; Note: SyncTeX is setup via ~/.latexmkrc (see below)
-;;(add-hook 'LaTeX-mode-hook (lambda ()
-;;  (push
-;;    '("latexmk" "rubber --pdf --synctex --warn=all %s" TeX-run-TeX nil t
-;;      :help "Run latexmk on file")
-;;    TeX-command-list)))
-;;(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+(add-hook 'LaTeX-mode-hook (lambda ()
+  (push
+    '("latexmk" "latexmk %s" TeX-run-TeX nil t
+      :help "Run latexmk on file")
+    TeX-command-list)))
+(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
 
 ;; use Skim as default pdf viewer
 ;; Skim's displayline is used for forward search (from .tex to .pdf)
@@ -119,10 +147,23 @@ Setup emacs package manager
 (server-start) 
 #+END_SRC
 
+**** LatexMk
+
+#+BEGIN_SRC
+(auctex-latexmk-setup)
+#+END_SRC
+
 *** NeoTree
 
 #+BEGIN_SRC emacs-lisp
 (require 'neotree)
+(custom-set-faces
+(set-face-attribute 'neo-button-face      nil :height 140)
+(set-face-attribute 'neo-file-link-face   nil :height 140)
+(set-face-attribute 'neo-dir-link-face    nil :height 140)
+(set-face-attribute 'neo-header-face      nil :height 140)
+(set-face-attribute 'neo-expand-btn-face  nil :height 140)
+)
 #+END_SRC
 
 *** Evil Mode
@@ -135,41 +176,53 @@ Setup emacs package manager
 (require 'general)
 (general-evil-setup)
 (key-chord-mode 1)
+;;(define-key evil-normal-state-map (kbd "]b") 'next-buffer)
+;;(define-key evil-normal-state-map (kbd "[b") 'previous-buffer)
+;;(define-key evil-normal-state-map (kbd "C-S-h") 'evil-window-left)
+;;(define-key evil-normal-state-map (kbd "C-S-j") 'evil-window-down)
+;;(define-key evil-normal-state-map (kbd "C-S-k") 'evil-window-up)
+;;(define-key evil-normal-state-map (kbd "C-S-l") 'evil-window-right):w
+
 (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
 (define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
 (define-key evil-insert-state-map (kbd "ESC") 'evil-normal-state)
 (general-nmap "Q" (general-simulate-key "gqap"))
 (general-vmap "Q" (general-simulate-key "gq"))
 
-(key-chord-define evil-normal-state-map ",," 'evil-force-normal-state)
-(key-chord-define evil-visual-state-map ",," 'evil-change-to-previous-state)
-(key-chord-define evil-insert-state-map ",," 'evil-normal-state)
-(key-chord-define evil-replace-state-map ",," 'evil-normal-state)
+(key-chord-define evil-normal-state-map "jk" 'evil-force-normal-state)
+(key-chord-define evil-visual-state-map "jk" 'evil-change-to-previous-state)
+(key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+(key-chord-define evil-replace-state-map "jk" 'evil-normal-state)
 
 (key-chord-define evil-normal-state-map "ee" 'evil-emacs-state)
 (key-chord-define evil-insert-state-map "ee" 'evil-emacs-state)
 (key-chord-define evil-emacs-state-map "ee" 'evil-normal-state)
 
-(defvar my-leader-map (make-sparse-keymap)
+(defvar comma-leader-map (make-sparse-keymap)
   "Keymap for \"leader key\" shortcuts.")
-(define-key evil-normal-state-map "," my-leader-map)
-;; binding ",b"
-;; (define-key my-leader-map "b" 'list-buffers)
+(define-key evil-normal-state-map "," comma-leader-map)
 
+
+(defvar bracket-leader-map (make-sparse-keymap)
+  "Keymap for \"leader key\" shortcuts.")
+(define-key evil-normal-state-map "[" bracket-leader-map)
 
 (defun my-run-latex ()
   (interactive)
   (TeX-save-document (TeX-master-file))
-  (TeX-command "LaTeX" 'TeX-master-file -1))
+  (TeX-command "latexmk" 'TeX-master-file -1))
 
 
+(define-key comma-leader-map "lr" 'my-run-latex)
+(define-key comma-leader-map "ls" 'TeX-view)
 
-(define-key my-leader-map "lr" 'my-run-latex)
-(define-key my-leader-map "ls" 'TeX-view)
+(define-key comma-leader-map "bn" 'next-buffer)
+(define-key comma-leader-map "bp" 'previous-buffer)
+
 
 ;; change the "leader" key to space
 ;; (define-key evil-normal-state-map "," 'evil-repeat-find-char-reverse)
-;; (define-key evil-normal-state-map (kbd "SPC") my-leader-map)
+;; (define-key evil-normal-state-map (kbd "SPC") comma-leader-map)
 
 (defun close-and-kill-this-pane ()
       "If there are multiple windows, then close this pane and kill the buffer in it also."
@@ -178,9 +231,9 @@ Setup emacs package manager
       (if (not (one-window-p))
           (delete-window)))
 
-(define-key my-leader-map "bd" 'close-and-kill-this-pane)
-(define-key my-leader-map "x" 'save-buffers-kill-emacs)
-(define-key my-leader-map "f" 'neotree-toggle)
+(define-key comma-leader-map "bd" 'close-and-kill-this-pane)
+(define-key comma-leader-map "x" 'save-buffers-kill-emacs)
+(define-key comma-leader-map "f" 'neotree-toggle)
 
 #+END_SRC
 
@@ -194,19 +247,6 @@ Setup emacs package manager
 (setq fci-rule-character ?\u2502)
 #+END_SRC
 
-*** nlinum
-#+BEGIN_SRC emacs-lisp
-(require 'nlinum-relative)
-(nlinum-relative-setup-evil)                    ;; setup for evil
-(add-hook 'prog-mode-hook 'nlinum-relative-mode)
-(setq nlinum-relative-redisplay-delay 0)      ;; delay
-(setq nlinum-relative-current-symbol "")      ;; or "" for display current line number
-(setq nlinum-relative-offset 0)                 ;; 1 if you want 0, 2, 3...
-(global-nlinum-relative-mode)
-(setq nlinum-format "%4d \u2502 ")
-(setq nlinum-highlight-current-line 1)
-#+END_SRC
-
 
 *** Powerline
 #+BEGIN_SRC emacs-lisp
@@ -215,6 +255,7 @@ Setup emacs package manager
 *** Helm
 #+BEGIN_SRC emacs-lisp
 (require 'helm)
+(require 'helm-bibtex)
 (setq helm-for-files-preferred-list '(helm-source-buffers-list
                                       helm-source-buffer-not-found
                                       helm-source-recentf
@@ -227,6 +268,10 @@ Setup emacs package manager
 
 (define-key helm-map (kbd "C-j") 'helm-next-line)
 (define-key helm-map (kbd "C-k") 'helm-previous-line)
+(autoload 'helm-bibtex "helm-bibtex" "" t)
+(setq bibtex-completion-bibliography
+      '("./thesis.bib"))
+(setq helm-bibtex-bibliography '("./thesis.bib"))
 #+END_SRC
 
 *** Flycheck
@@ -237,43 +282,125 @@ Setup emacs package manager
 #+END_SRC
 
 
-
 *** Tabbar
+
+
+
+#+BEGIN_SRC emacs-lisp
+;;(setq seoul256-background 235)
+;;(load-theme 'seoul256 t)
+(linum-mode)
+(linum-relative-global-mode)
+(setq evil-emacs-state-cursor '("chartreuse3" (bar . 2)))
+(require 'powerline)
+(require 'airline-themes)
+
+
+;;(load-theme 'solarized-dark t)
+;; make the fringe stand out from the background
+;;(setq solarized-distinct-fringe-background t)
+
+;; Don't change the font for some headings and titles
+;;(setq solarized-use-variable-pitch nil)
+
+;; make the modeline high contrast
+;;(setq solarized-high-contrast-mode-line t)
+
+;; Use less bolding
+;;(setq solarized-use-less-bold t)
+
+;; Use more italics
+;;(setq solarized-use-more-italic t)
+
+;; Use less colors for indicators such as git:gutter, flycheck and similar
+;;(setq solarized-emphasize-indicators nil)
+
+;; Don't change size of org-mode headlines (but keep other size-changes)
+;;(setq solarized-scale-org-headlines nil)
+
+;; Avoid all font-size changes
+;;(setq solarized-height-minus-1 1.0)
+;;(setq solarized-height-plus-1 1.0)
+;;(setq solarized-height-plus-2 1.0)
+;;(setq solarized-height-plus-3 1.0)
+;;(setq solarized-height-plus-4 1.0)
+
+
+
+(require 'doom-themes)
+
+;; Global settings (defaults)
+(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t
+      nlinum-highlight-current-line t) ; if nil, italics is universally disabled
+
+;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+;; may have their own settings.
+(load-theme 'doom-one t)
+
+(setq doom-line-numbers-style 'relative)
+
+;; Enable flashing mode-line on errors
+(doom-themes-visual-bell-config)
+
+;; Enable custom neotree theme
+;;(doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
+
+;; Corrects (and improves) org-mode's native fontification.
+(doom-themes-org-config)
+
+(set-face-attribute 'org-level-1 nil :height 1.0)
+
+
+
+
+(load-theme 'airline-doom-one t)
+(setq neo-theme 'arrow)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+#+END_SRC
+
+
 #+BEGIN_SRC emacs-lisp
 ;; Tabbar
 (require 'tabbar)
 
-(tabbar-mode 1)
+;;(tabbar-mode 1)
 ;; Tabbar settings
-(set-face-attribute
- 'tabbar-default nil
- :background "gray20"
- :foreground "gray20"
- :box '(:line-width 1 :color "gray20" :style nil))
-(set-face-attribute
- 'tabbar-unselected nil
- :background "gray30"
- :foreground "white"
- :box '(:line-width 5 :color "gray30" :style nil))
-(set-face-attribute
- 'tabbar-selected nil
- :background "gray75"
- :foreground "black"
- :box '(:line-width 5 :color "gray75" :style nil))
-(set-face-attribute
- 'tabbar-highlight nil
- :background "white"
- :foreground "black"
- :underline nil
- :box '(:line-width 5 :color "white" :style nil))
-(set-face-attribute
- 'tabbar-button nil
- :box '(:line-width 1 :color "gray20" :style nil))
-(set-face-attribute
- 'tabbar-separator nil
- :background "gray20"
- :height 0.6)
-
+;;(set-face-attribute
+;; 'tabbar-default nil
+;; :background "gray20"
+;; :foreground "gray20"
+;; :box '(:line-width 1 :color "gray20" :style nil))
+;;(set-face-attribute
+;; 'tabbar-unselected nil
+;; :background "gray30"
+;; :foreground "white"
+;; :box '(:line-width 5 :color "gray30" :style nil))
+;;(set-face-attribute
+;; 'tabbar-selected nil
+;; :background "gray75"
+;; :foreground "black"
+;; :box '(:line-width 5 :color "gray75" :style nil))
+;;(set-face-attribute
+;; 'tabbar-highlight nil
+;; :background "white"
+;; :foreground "black"
+;; :underline nil
+;; :box '(:line-width 5 :color "white" :style nil))
+;;(set-face-attribute
+;; 'tabbar-button nil
+;; :box '(:line-width 1 :color "gray20" :style nil))
+;;(set-face-attribute
+;; 'tabbar-separator nil
+;; :background "gray20"
+;; :height 0.6)
+;;
 ;; Change padding of the tabs
 ;; we also need to set separator to avoid overlapping tabs by highlighted tabs
 (custom-set-variables
@@ -302,5 +429,6 @@ That is, a string used to represent it on the tab bar."
 
 #+END_SRC
 
-
-
+#+BEGIN_SRC emacs-lisp
+(setq custom-safe-themes t)
+#+END_SRC
