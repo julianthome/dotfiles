@@ -59,30 +59,58 @@ Setup emacs package manager
 
 #+BEGIN_SRC emacs-lisp
 
+(require 'package)
 
-(setq package-list '(helm evil key-chord doom-themes fill-column-indicator general hydra tabbar auctex flycheck exec-path-from-shell neotree auctex-latexmk org-bullets powerline airline-themes solarized-theme helm-bibtex))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+
+(setq package-enable-at-startup nil)
+(package-initialize)
+
+(defun ensure-package-installed (&rest packages)
+  "Assure every package is installed, ask for installation if it's not.
+Return a list of installed packages or nil for every skipped package."
+  (mapcar
+   (lambda (package)
+     (if (package-installed-p package)
+	 nil
+       (if (y-or-n-p (format  "Package %s is missing. Install it? " package))
+	   (package-install package)
+	 package)))
+   packages))
+
+;; Make sure to have downloaded archive description.
+(or (file-exists-p package-user-dir)
+    (package-refresh-content))
+
+;; Activate installed packages.
+(package-initialize)
+
+
+(ensure-package-installed
+      'helm 
+      'evil 
+      'key-chord 
+      'doom-themes 
+      'fill-column-indicator
+      'general 
+      'hydra 
+      'auctex 
+      'flycheck 
+      'exec-path-from-shell 
+      'neotree 
+      'auctex-latexmk 
+      'org-bullets 
+      'powerline 
+      'airline-themes 
+      'solarized-theme 
+      'helm-bibtex 
+      'evil-magit 
+      'flyspell)
 
 ; list the repositories containing them
 
-  (setq package-archives
-        '(("marmalade"   . "http://marmalade-repo.org/packages/")
-          ("gnu"         . "http://elpa.gnu.org/packages/")
-          ("org"         . "http://orgmode.org/elpa/")
-          ("melpa"       . "https://melpa.org/packages/")
-          ("melpa-stable" . "https://stable.melpa.org/packages/")))
-
-
-; activate all the packages (in particular autoloads)
-(package-initialize)
-
-; fetch the list of packages available 
-(unless package-archive-contents
-  (package-refresh-contents))
-
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
 #+END_SRC
 
 * Setup Local Workspace
@@ -281,6 +309,12 @@ Setup emacs package manager
 (exec-path-from-shell-initialize)
 #+END_SRC
 
+*** Flyspell
+#+BEGIN_SRC emacs-lisp
+(require 'flyspell)
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+#+END_SRC
 
 *** Tabbar
 
@@ -432,3 +466,25 @@ That is, a string used to represent it on the tab bar."
 #+BEGIN_SRC emacs-lisp
 (setq custom-safe-themes t)
 #+END_SRC
+
+*** Magit
+
+#+BEGIN_SRC emacs-lisp
+(require 'evil-magit)
+#+END_SRC
+
+*** Proselint
+
+#+BEGIN_SRC emacs-lisp
+(flycheck-define-checker proselint
+  "A linter for prose."
+  :command ("proselint" source-inplace)
+  :error-patterns
+  ((warning line-start (file-name) ":" line ":" column ": "
+	    (id (one-or-more (not (any " "))))
+	    (message) line-end))
+  :modes (text-mode markdown-mode gfm-mode))
+
+(add-to-list 'flycheck-checkers 'proselint)
+#+END_SRC
+
