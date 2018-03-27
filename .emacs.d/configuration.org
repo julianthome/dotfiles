@@ -1,3 +1,21 @@
+* Useful functions
+
+Read lines from file into list if file exists. It does not report and error
+message for non-existing files.
+
+#+BEGIN_SRC emacs-lisp
+(defun read-lines (filePath)
+  "Return a list of lines of a file at filePath."
+  (if (file-exists-p filePath)
+      (with-temp-buffer
+            (insert-file-contents filePath)
+                  (split-string (buffer-string) "\n" t))
+    ""
+    )
+)
+#+END_SRC
+
+
 * Base configuration
 
 Base editor configuration command.
@@ -55,6 +73,7 @@ Base editor configuration command.
 
 * Melpa
 
+** General config
 Setup emacs package manager.
 
 #+BEGIN_SRC emacs-lisp
@@ -85,10 +104,15 @@ Return a list of installed packages or nil for every skipped package."
 
 ;; Activate installed packages.
 (package-initialize)
+#+END_SRC
 
+** Packages
+
+#+BEGIN_SRC emacs-lisp
 (ensure-package-installed
       'helm 
       'evil 
+      'evil-org
       'key-chord 
       'doom-themes 
       'fill-column-indicator
@@ -100,6 +124,7 @@ Return a list of installed packages or nil for every skipped package."
       'neotree 
       'auctex-latexmk 
       'org-bullets 
+      'org-journal
       'powerline 
       'airline-themes 
       'solarized-theme 
@@ -113,7 +138,6 @@ Return a list of installed packages or nil for every skipped package."
 
 * Setup Local Workspace
 ** Package Configuration
-
 *** Linum
 
 #+BEGIN_SRC emacs-lisp
@@ -153,15 +177,6 @@ Return a list of installed packages or nil for every skipped package."
 (doom-themes-org-config)
 (set-face-attribute 'org-level-1 nil :height 1.0)
 (load-theme 'airline-doom-one t)
-#+END_SRC
-
-
-*** Pretty org bullets
-
-#+BEGIN_SRC emacs-lisp
-(require 'org)
-(require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+END_SRC
 
 *** AucTex
@@ -220,6 +235,13 @@ Return a list of installed packages or nil for every skipped package."
 (set-face-attribute 'neo-expand-btn-face  nil :height 140)
 )
 (setq neo-theme 'arrow)
+
+(add-hook 'neotree-mode-hook
+  (lambda ()
+    (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
+    (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-quick-look)
+    (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+    (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
 #+END_SRC
 
 *** Evil Mode
@@ -354,6 +376,45 @@ Git support for Emacs
 #+BEGIN_SRC emacs-lisp
 (require 'evil-magit)
 #+END_SRC
+
+*** Org
+
+Archiving.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-archive-mark-done nil)
+(setq org-archive-location "%s_archive::* Archived Tasks")
+(require 'org-journal)
+#+END_SRC
+
+Org Journal.
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-journal)
+#+END_SRC
+
+Pretty org bullets.
+
+#+BEGIN_SRC emacs-lisp
+(require 'org)
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+END_SRC
+
+Global todo lists.
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-files (read-lines "~/todo.txt"))
+#+END_SRC
+
+Evil keybindings.
+#+BEGIN_SRC emacs-lisp
+(require 'evil-org)
+(add-hook 'org-mode-hook 'evil-org-mode)
+(evil-org-set-key-theme '(navigation insert textobjects additional calendar))
+(require 'evil-org-agenda)
+(evil-org-agenda-set-keys)
+#+END_SRC
+
 
 *** Proselint
 
