@@ -15,9 +15,7 @@ message for non-existing files.
 )
 #+END_SRC
 
-
 * Base configuration
-
 Base editor configuration command.
 
 #+BEGIN_SRC emacs-lisp
@@ -72,7 +70,6 @@ Base editor configuration command.
 #+END_SRC
 
 * Melpa
-
 ** General config
 Setup emacs package manager.
 
@@ -401,12 +398,8 @@ Pretty org bullets.
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+END_SRC
 
-Global todo lists.
-#+BEGIN_SRC emacs-lisp
-(setq org-agenda-files (read-lines "~/todo.txt"))
-#+END_SRC
-
 Evil keybindings.
+
 #+BEGIN_SRC emacs-lisp
 (require 'evil-org)
 (add-hook 'org-mode-hook 'evil-org-mode)
@@ -415,6 +408,47 @@ Evil keybindings.
 (evil-org-agenda-set-keys)
 #+END_SRC
 
+Arrow that point downwards instead of ellipsis in org mode.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-ellipsis "⤵")
+#+END_SRC
+
+
+Syntax highlighting for blocks while editing
+
+#+BEGIN_SRC emacs-lisp
+(setq org-src-fontify-natively t)
+#+END_SRC
+
+Task Management settings.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/org")
+
+(defun org-file-path (filename)
+  "Return the absolute address of an org file, given its relative name."
+  (concat (file-name-as-directory org-directory) filename))
+
+(setq org-index-file (org-file-path "index.org"))
+(setq org-archive-location
+      (concat (org-file-path "archive.org") "::* From %s"))
+#+END_SRC
+
+Global todo lists.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-files (read-lines "~/todo.txt"))
+#+END_SRC
+
+
+
+
+Archiving time.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-log-done 'time)
+#+END_SRC
 
 *** Proselint
 
