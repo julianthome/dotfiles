@@ -1,6 +1,6 @@
 * Base configuration
 
-Base editor configuration command
+Base editor configuration command.
 
 #+BEGIN_SRC emacs-lisp
 (tool-bar-mode -1)
@@ -19,13 +19,12 @@ Base editor configuration command
 (setq enable-local-variables :safe)
 
 ;; ITERM2 MOUSE SUPPORT
-    (unless window-system
-      (require 'mouse)
-      (xterm-mouse-mode t)
-      (defun track-mouse (e)) 
-      (setq mouse-sel-mode t)
-    )
-
+(unless window-system
+  (require 'mouse)
+  (xterm-mouse-mode t)
+  (defun track-mouse (e)) 
+  (setq mouse-sel-mode t)
+)
 
 ;; backwards compatibility as default-buffer-file-coding-system
 ;; is deprecated in 23.2.
@@ -51,16 +50,16 @@ Base editor configuration command
 ;; Aktuelle Spaltennummer in der Mode Line anzeigen
 (column-number-mode nil)
 ;;(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-16"))
+
 #+END_SRC
 
 * Melpa
 
-Setup emacs package manager
+Setup emacs package manager.
 
 #+BEGIN_SRC emacs-lisp
 
 (require 'package)
-
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
@@ -86,7 +85,6 @@ Return a list of installed packages or nil for every skipped package."
 
 ;; Activate installed packages.
 (package-initialize)
-
 
 (ensure-package-installed
       'helm 
@@ -114,25 +112,52 @@ Return a list of installed packages or nil for every skipped package."
 #+END_SRC
 
 * Setup Local Workspace
-** Local Packages
-#+BEGIN_SRC emacs-lisp
-;;(setq seoul256-background 235)
-;;(load-theme 'seoul256 t)
-;; These two lines are just examples
-;;(setq powerline-arrow-shape 'curve)
-;;(setq powerline-default-separator-dir '(right . left))
-;; These two lines you really need.
-;;(setq sml/theme 'dark)
-;;(setq sml/no-confirm-load-theme t)
+** Package Configuration
 
-;;(sml/setup)
+*** Linum
+
+#+BEGIN_SRC emacs-lisp
+;; relative numbering
+(linum-mode)
+(linum-relative-global-mode)
+#+END_SRC
+
+*** Airline
+
+#+BEGIN_SRC emacs-lisp
+(setq evil-emacs-state-cursor '("chartreuse3" (bar . 2)))
+(require 'powerline)
+(require 'airline-themes)
+#+END_SRC
+
+*** Doom Theme
+
+#+BEGIN_SRC emacs-lisp
+(require 'doom-themes)
+
+;; Global settings (defaults)
+(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+      doom-themes-enable-italic t
+      nlinum-highlight-current-line t) ; if nil, italics is universally disabled
+
+;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+;; may have their own settings.
+(load-theme 'doom-one t)
+
+(setq doom-line-numbers-style 'relative)
+
+;; Enable flashing mode-line on errors
+(doom-themes-visual-bell-config)
+
+;; Corrects (and improves) org-mode's native fontification.
+(doom-themes-org-config)
+(set-face-attribute 'org-level-1 nil :height 1.0)
+(load-theme 'airline-doom-one t)
 #+END_SRC
 
 
+*** Pretty org bullets
 
-** Package Configuration
-
-*** Org mode
 #+BEGIN_SRC emacs-lisp
 (require 'org)
 (require 'org-bullets)
@@ -140,16 +165,18 @@ Return a list of installed packages or nil for every skipped package."
 #+END_SRC
 
 *** AucTex
+
 #+BEGIN_SRC emacs-lisp
 ;; AucTeX
-;; AucTeX
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
 (setq-default TeX-master nil)
+(setq TeX-parse-self t) ; Enable parse on load.
+(setq TeX-auto-save t) ; Enable parse on save.
+
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
 (setq reftex-plug-into-AUCTeX t)
 (setq TeX-PDF-mode t)
  
@@ -192,6 +219,7 @@ Return a list of installed packages or nil for every skipped package."
 (set-face-attribute 'neo-header-face      nil :height 140)
 (set-face-attribute 'neo-expand-btn-face  nil :height 140)
 )
+(setq neo-theme 'arrow)
 #+END_SRC
 
 *** Evil Mode
@@ -204,6 +232,9 @@ Return a list of installed packages or nil for every skipped package."
 (require 'general)
 (general-evil-setup)
 (key-chord-mode 1)
+
+;; enable replacement in visual selection per default
+(setq evil-ex-visual-char-range t)
 ;;(define-key evil-normal-state-map (kbd "]b") 'next-buffer)
 ;;(define-key evil-normal-state-map (kbd "[b") 'previous-buffer)
 ;;(define-key evil-normal-state-map (kbd "C-S-h") 'evil-window-left)
@@ -223,7 +254,8 @@ Return a list of installed packages or nil for every skipped package."
 (key-chord-define evil-replace-state-map "jk" 'evil-normal-state)
 
 (key-chord-define evil-normal-state-map "ee" 'evil-emacs-state)
-(key-chord-define evil-insert-state-map "ee" 'evil-emacs-state)
+;; having words with 'ee' is quite common - so do not use this in insert mode
+;;(key-chord-define evil-insert-state-map "ee" 'evil-emacs-state)
 (key-chord-define evil-emacs-state-map "ee" 'evil-normal-state)
 
 (defvar comma-leader-map (make-sparse-keymap)
@@ -266,6 +298,7 @@ Return a list of installed packages or nil for every skipped package."
 #+END_SRC
 
 *** column indicator
+
 #+BEGIN_SRC emacs-lisp
 (require 'fill-column-indicator)
 (setq fci-rule-width 1)
@@ -275,12 +308,8 @@ Return a list of installed packages or nil for every skipped package."
 (setq fci-rule-character ?\u2502)
 #+END_SRC
 
-
-*** Powerline
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
 *** Helm
+
 #+BEGIN_SRC emacs-lisp
 (require 'helm)
 (require 'helm-bibtex)
@@ -303,6 +332,7 @@ Return a list of installed packages or nil for every skipped package."
 #+END_SRC
 
 *** Flycheck
+
 #+BEGIN_SRC emacs-lisp
 (package-install 'flycheck)
 (global-flycheck-mode)
@@ -310,170 +340,24 @@ Return a list of installed packages or nil for every skipped package."
 #+END_SRC
 
 *** Flyspell
+
 #+BEGIN_SRC emacs-lisp
 (require 'flyspell)
 (dolist (hook '(text-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
 #+END_SRC
 
-*** Tabbar
-
-
-
-#+BEGIN_SRC emacs-lisp
-;;(setq seoul256-background 235)
-;;(load-theme 'seoul256 t)
-(linum-mode)
-(linum-relative-global-mode)
-(setq evil-emacs-state-cursor '("chartreuse3" (bar . 2)))
-(require 'powerline)
-(require 'airline-themes)
-
-
-;;(load-theme 'solarized-dark t)
-;; make the fringe stand out from the background
-;;(setq solarized-distinct-fringe-background t)
-
-;; Don't change the font for some headings and titles
-;;(setq solarized-use-variable-pitch nil)
-
-;; make the modeline high contrast
-;;(setq solarized-high-contrast-mode-line t)
-
-;; Use less bolding
-;;(setq solarized-use-less-bold t)
-
-;; Use more italics
-;;(setq solarized-use-more-italic t)
-
-;; Use less colors for indicators such as git:gutter, flycheck and similar
-;;(setq solarized-emphasize-indicators nil)
-
-;; Don't change size of org-mode headlines (but keep other size-changes)
-;;(setq solarized-scale-org-headlines nil)
-
-;; Avoid all font-size changes
-;;(setq solarized-height-minus-1 1.0)
-;;(setq solarized-height-plus-1 1.0)
-;;(setq solarized-height-plus-2 1.0)
-;;(setq solarized-height-plus-3 1.0)
-;;(setq solarized-height-plus-4 1.0)
-
-
-
-(require 'doom-themes)
-
-;; Global settings (defaults)
-(setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-      doom-themes-enable-italic t
-      nlinum-highlight-current-line t) ; if nil, italics is universally disabled
-
-;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-;; may have their own settings.
-(load-theme 'doom-one t)
-
-(setq doom-line-numbers-style 'relative)
-
-;; Enable flashing mode-line on errors
-(doom-themes-visual-bell-config)
-
-;; Enable custom neotree theme
-;;(doom-themes-neotree-config)  ; all-the-icons fonts must be installed!
-
-;; Corrects (and improves) org-mode's native fontification.
-(doom-themes-org-config)
-
-(set-face-attribute 'org-level-1 nil :height 1.0)
-
-
-
-
-(load-theme 'airline-doom-one t)
-(setq neo-theme 'arrow)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-(evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
-(evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-(evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
-#+END_SRC
-
-
-#+BEGIN_SRC emacs-lisp
-;; Tabbar
-(require 'tabbar)
-
-;;(tabbar-mode 1)
-;; Tabbar settings
-;;(set-face-attribute
-;; 'tabbar-default nil
-;; :background "gray20"
-;; :foreground "gray20"
-;; :box '(:line-width 1 :color "gray20" :style nil))
-;;(set-face-attribute
-;; 'tabbar-unselected nil
-;; :background "gray30"
-;; :foreground "white"
-;; :box '(:line-width 5 :color "gray30" :style nil))
-;;(set-face-attribute
-;; 'tabbar-selected nil
-;; :background "gray75"
-;; :foreground "black"
-;; :box '(:line-width 5 :color "gray75" :style nil))
-;;(set-face-attribute
-;; 'tabbar-highlight nil
-;; :background "white"
-;; :foreground "black"
-;; :underline nil
-;; :box '(:line-width 5 :color "white" :style nil))
-;;(set-face-attribute
-;; 'tabbar-button nil
-;; :box '(:line-width 1 :color "gray20" :style nil))
-;;(set-face-attribute
-;; 'tabbar-separator nil
-;; :background "gray20"
-;; :height 0.6)
-;;
-;; Change padding of the tabs
-;; we also need to set separator to avoid overlapping tabs by highlighted tabs
-(custom-set-variables
- '(tabbar-separator (quote (0.5))))
-;; adding spaces
-(defun tabbar-buffer-tab-label (tab)
-  "Return a label for TAB.
-That is, a string used to represent it on the tab bar."
-  (let ((label  (if tabbar--buffer-show-groups
-                    (format "[%s]  " (tabbar-tab-tabset tab))
-                  (format "%s  " (tabbar-tab-value tab)))))
-    ;; Unless the tab bar auto scrolls to keep the selected tab
-    ;; visible, shorten the tab label to keep as many tabs as possible
-    ;; in the visible area of the tab bar.
-    (if tabbar-auto-scroll-flag
-        label
-      (tabbar-shorten
-       label (max 1 (/ (window-width)
-                       (length (tabbar-view
-                                (tabbar-current-tabset)))))))))
-
-
-; turn on the tabbar
-(define-key evil-normal-state-map "]b" 'tabbar-forward-tab)
-(define-key evil-normal-state-map "[b" 'tabbar-backward-tab)
-
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(setq custom-safe-themes t)
-#+END_SRC
-
 *** Magit
+
+Git support for Emacs
 
 #+BEGIN_SRC emacs-lisp
 (require 'evil-magit)
 #+END_SRC
 
 *** Proselint
+
+A linter for prose.
 
 #+BEGIN_SRC emacs-lisp
 (flycheck-define-checker proselint
