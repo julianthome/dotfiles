@@ -150,13 +150,7 @@ frame just for that file.
 (setq ns-pop-up-frames nil)
 #+END_SRC
 
-Store backups and auto-saved files in TEMPORARY-FILE-DIRECTORY (which
-defaults to /tmp on Unix), instead of in the same directory as the
-file. This means we're still making backups, but not where they'll get
-in the way.  WARNING: on most Unix-like systems /tmp is volatile,
-in-memory storage, so your backups won't survive if your computer
-crashes!  If you're not willing to take this risk, you shouldn't
-enable this setting.
+Store backups and auto-saved files in /tmp.
 
 #+BEGIN_SRC emacs-lisp
 (defun backup-to-temp-directory ()
@@ -170,27 +164,53 @@ enable this setting.
 Keybindings.
 
 #+BEGIN_SRC emacs-lisp
-(defun bind-commenting-and-uncommenting ()
-  "Comment or uncomment a region by hitting M-;."
-  (global-set-key (kbd "M-;")
-                  'comment-or-uncomment-region-or-line))
+(setq default-font "Source Code Pro")
+(setq default-font-size 16)
+(setq current-font-size default-font-size)
 
-(defun bind-home-and-end-keys ()
-  "Make <home> and <end> move point to the beginning and end of
-the line, respectively."
-  (global-set-key (kbd "<home>") 'move-beginning-of-line)
-  (global-set-key (kbd "<end>") 'move-end-of-line))
+(setq font-change-increment 1.1)
 
-(defun bind-keys-to-change-text-size ()
-  "Bind C-+ and C-- to increase and decrease text size,
-respectively."
-  (define-key global-map (kbd "C-)") 'reset-text-size)
-  (define-key global-map (kbd "C-+") 'text-scale-increase)
-  (define-key global-map (kbd "C-=") 'text-scale-increase)
-  (define-key global-map (kbd "C-_") 'text-scale-decrease)
-  (define-key global-map (kbd "C--") 'text-scale-decrease))
+(defun font-code ()
+  "Return a string representing the current font"
+  (concat default-font "-" (number-to-string current-font-size)))
 
-(bind-keys-to-change-text-size)
+(defun set-font-size ()
+  "Set the font to `default-font' at `current-font-size'.
+Set that for the current frame, and also make it the default for
+other, future frames."
+  (let ((font-code (font-code)))
+    (add-to-list 'default-frame-alist (cons 'font font-code))
+    (set-frame-font font-code)))
+
+(defun reset-font-size ()
+  "Change font size back to `default-font-size'."
+  (interactive)
+  (setq current-font-size default-font-size)
+  (set-font-size))
+
+(defun increase-font-size ()
+  "Increase current font size by a factor of `font-change-increment'."
+  (interactive)
+  (setq current-font-size
+        (ceiling (* current-font-size font-change-increment)))
+  (set-font-size))
+
+(defun decrease-font-size ()
+  "Decrease current font size by a factor of `font-change-increment', down to a minimum size of 1."
+  (interactive)
+  (setq current-font-size
+        (max 1
+             (floor (/ current-font-size font-change-increment))))
+  (set-font-size))
+
+(define-key global-map (kbd "C-)") 'reset-font-size)
+(define-key global-map (kbd "C-+") 'increase-font-size)
+(define-key global-map (kbd "C-=") 'increase-font-size)
+(define-key global-map (kbd "C-_") 'decrease-font-size)
+(define-key global-map (kbd "C--") 'decrease-font-size)
+
+(reset-font-size)
+
 #+END_SRC
 
 
@@ -228,7 +248,6 @@ is deprecated in 23.2.
     (setq-default buffer-file-coding-system 'utf-8)
   (setq default-buffer-file-coding-system 'utf-8))
 #+END_SRC
-
 
 
 
