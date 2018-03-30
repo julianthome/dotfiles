@@ -376,6 +376,14 @@ Git support for Emacs
 
 *** Org
 
+Org states.
+
+#+BEGIN_SRC emacs-lisp 
+(setq org-todo-keywords
+  '((sequence "TODO" "WAIT" "|" "DONE" "CANCELED")))
+#+END_SRC
+
+
 Archiving.
 
 #+BEGIN_SRC emacs-lisp
