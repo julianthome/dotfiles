@@ -1,3 +1,12 @@
+* Personal Information
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Julian Thome"
+      user-mail-address "julian.thome.de@gmail.com"
+      calendar-latitude 49.815273
+      calendar-longitude 6.129583
+      calendar-location-name "Luxembourg")
+#+END_SRC
+
 * Useful functions
 
 Read lines from file into list if file exists. It does not report and error
@@ -15,59 +24,215 @@ message for non-existing files.
 )
 #+END_SRC
 
-* Base configuration
-Base editor configuration command.
+* Sensible default settings
+
+Some sensible default settings some of which were taken from Harry
+Schwartz' sensible default package https://github.com/hrs.
+
+Disable backup.
 
 #+BEGIN_SRC emacs-lisp
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
 (setq make-backup-files nil)
+#+END_SRC
+
+Highlight current line.
+
+#+BEGIN_SRC emacs-lisp
+(global-hl-line-mode 1)
+#+END_SRC
+
+Local variables.
+
+Always set safe variables and ignore the others.
+
+#+BEGIN_SRC emacs-lisp
+(setq enable-local-variables :safe)
+#+END_SRC
+
+Increase the limit before calling garbage collection.
+
+#+BEGIN_SRC emacs-lisp
+(setq gc-cons-threshold 20000000)
+#+END_SRC
+
+Always follow symlinks.
+
+#+BEGIN_SRC emacs-lisp
+(setq vc-follow-symlinks t)
+#+END_SRC
+
+Don't assume that sentences should have two spaces after
+period.
+
+#+BEGIN_SRC emacs-lisp
+(setq sentence-end-double-space nil)
+#+END_SRC
+
+Enable transient mark mode.
+
+#+BEGIN_SRC emacs-lisp
+(transient-mark-mode t)
+#+END_SRC
+
+Delete selected text when providing input.
+#+BEGIN_SRC emacs-lisp
+(delete-selection-mode 1) 
+#+END_SRC
+
+Do not present the startup messge; clear scratch buffer.
+
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
+#+END_SRC
+
+Human readable units.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default dired-listing-switches "-alh")
+#+END_SRC
+
+Don't ask `yes/no?', ask `y/n?'.
+
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+Enable syntax highlighting. 
+
+#+BEGIN_SRC emacs-lisp
+(global-font-lock-mode t)
+#+END_SRC
+
+Automatically sync buffer after file change.
+
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode t)
+#+END_SRC
+
+Highlight matching parens.
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+(setq show-paren-delay 0.0)
+#+END_SRC
+
+Do not hightlight text inside parens
+
+#+BEGIN_SRC emacs-lisp
+(setq show-paren-style 'parenthesis)
+#+END_SRC
+
+When you perform a problematic operation, flash the screen
+instead of ringing the terminal bell.
+
+#+BEGIN_SRC emacs-lisp
+(setq visible-bell t)
+#+END_SRC
+
+Turn off alarms completely.
+
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function 'ignore)
+#+END_SRC
+
+
+Set the default line length to 80.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default fill-column 80)
+#+END_SRC
+
+When you double-click on a file in the Mac Finder open it as a
+buffer in the existing Emacs frame, rather than creating a new
+frame just for that file.
+
+#+BEGIN_SRC emacs-lisp
+(setq ns-pop-up-frames nil)
+#+END_SRC
+
+Store backups and auto-saved files in TEMPORARY-FILE-DIRECTORY (which
+defaults to /tmp on Unix), instead of in the same directory as the
+file. This means we're still making backups, but not where they'll get
+in the way.  WARNING: on most Unix-like systems /tmp is volatile,
+in-memory storage, so your backups won't survive if your computer
+crashes!  If you're not willing to take this risk, you shouldn't
+enable this setting.
+
+#+BEGIN_SRC emacs-lisp
+(defun backup-to-temp-directory ()
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t))))
+
+#+END_SRC
+
+Keybindings.
+
+#+BEGIN_SRC emacs-lisp
+(defun bind-commenting-and-uncommenting ()
+  "Comment or uncomment a region by hitting M-;."
+  (global-set-key (kbd "M-;")
+                  'comment-or-uncomment-region-or-line))
+
+(defun bind-home-and-end-keys ()
+  "Make <home> and <end> move point to the beginning and end of
+the line, respectively."
+  (global-set-key (kbd "<home>") 'move-beginning-of-line)
+  (global-set-key (kbd "<end>") 'move-end-of-line))
+
+(defun bind-keys-to-change-text-size ()
+  "Bind C-+ and C-- to increase and decrease text size,
+respectively."
+  (define-key global-map (kbd "C-)") 'reset-text-size)
+  (define-key global-map (kbd "C-+") 'text-scale-increase)
+  (define-key global-map (kbd "C-=") 'text-scale-increase)
+  (define-key global-map (kbd "C-_") 'text-scale-decrease)
+  (define-key global-map (kbd "C--") 'text-scale-decrease))
+
+(bind-keys-to-change-text-size)
+#+END_SRC
+
+
+Save place.
+
+#+BEGIN_SRC emacs-lisp
+(require 'saveplace)
 (setq auto-save-default nil)
 (setq save-place-file "~/.emacs.d/saveplace")
 (setq-default save-place t)
-(require 'saveplace)
-(global-hl-line-mode 1)
-(setq inhibit-startup-screen t)
-; always follow symlinks
-(setq vc-follow-symlinks nil)
-; always set safe variables and ignore the others
-(setq enable-local-variables :safe)
+#+END_SRC
 
-;; ITERM2 MOUSE SUPPORT
+Iterm Mouse settings.
+
+#+BEGIN_SRC emacs-lisp
 (unless window-system
   (require 'mouse)
   (xterm-mouse-mode t)
   (defun track-mouse (e)) 
   (setq mouse-sel-mode t)
 )
+#+END_SRC
 
-;; backwards compatibility as default-buffer-file-coding-system
-;; is deprecated in 23.2.
+Show column no in mode line.
+
+#+BEGIN_SRC emacs-lisp
+(column-number-mode nil)
+#+END_SRC
+
+Backwards compatibility as default-buffer-file-coding-system
+is deprecated in 23.2.
+
+#+BEGIN_SRC emacs-lisp 
 (if (boundp 'buffer-file-coding-system)
     (setq-default buffer-file-coding-system 'utf-8)
   (setq default-buffer-file-coding-system 'utf-8))
-
-;; Treat clipboard input as UTF-8 string first; compound text next, etc.
-;;(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-(set-default-font "Source Code Pro 16")
-
-;; ausgewählten Text bei Eingabe löschen
-(delete-selection-mode 1) 
-
-;; keine "yes-or-no"-Fragen - "y-or-n" reicht aus
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; Zusammengehörende Klammern hervorheben
-(show-paren-mode 1)
-;; Text zwischen den Klammern nicht hervorheben
-(setq show-paren-style 'parenthesis)
-
-;; Aktuelle Spaltennummer in der Mode Line anzeigen
-(column-number-mode nil)
-;;(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-16"))
-
 #+END_SRC
+
+
+
+
+
 
 * Melpa
 ** General config
@@ -110,6 +275,7 @@ Return a list of installed packages or nil for every skipped package."
       'helm 
       'evil 
       'evil-org
+      'evil-surround
       'key-chord 
       'doom-themes 
       'fill-column-indicator
@@ -128,14 +294,37 @@ Return a list of installed packages or nil for every skipped package."
       'helm-bibtex 
       'evil-magit 
       'flyspell)
-
-; list the repositories containing them
-
 #+END_SRC
 
-* Setup Local Workspace
-** Package Configuration
-*** Linum
+* UI configuration
+
+** General
+Use nice lambdas.
+
+#+BEGIN_SRC emacs-lisp
+(global-prettify-symbols-mode t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; no menu and scroll bars
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+#+END_SRC
+
+Column indicator.
+
+#+BEGIN_SRC emacs-lisp
+(require 'fill-column-indicator)
+(setq fci-rule-width 1)
+(setq fci-rule-column 80)
+(add-hook 'after-change-major-mode-hook 'fci-mode)
+(setq fci-rule-color "#a4adbc")
+(setq fci-rule-character ?\u2502)
+#+END_SRC
+
+
+** Linum
 
 #+BEGIN_SRC emacs-lisp
 ;; relative numbering
@@ -143,7 +332,7 @@ Return a list of installed packages or nil for every skipped package."
 (linum-relative-global-mode)
 #+END_SRC
 
-*** Airline
+** Airline
 
 #+BEGIN_SRC emacs-lisp
 (setq evil-emacs-state-cursor '("chartreuse3" (bar . 2)))
@@ -151,7 +340,7 @@ Return a list of installed packages or nil for every skipped package."
 (require 'airline-themes)
 #+END_SRC
 
-*** Doom Theme
+** Doom Theme
 
 #+BEGIN_SRC emacs-lisp
 (require 'doom-themes)
@@ -176,7 +365,9 @@ Return a list of installed packages or nil for every skipped package."
 (load-theme 'airline-doom-one t)
 #+END_SRC
 
-*** AucTex
+* Latex Packages
+
+** AucTex
 
 #+BEGIN_SRC emacs-lisp
 ;; AucTeX
@@ -214,13 +405,14 @@ Return a list of installed packages or nil for every skipped package."
 (server-start) 
 #+END_SRC
 
-**** LatexMk
+*** LatexMk
 
 #+BEGIN_SRC
 (auctex-latexmk-setup)
 #+END_SRC
 
-*** NeoTree
+
+** NeoTree
 
 #+BEGIN_SRC emacs-lisp
 (require 'neotree)
@@ -241,12 +433,13 @@ Return a list of installed packages or nil for every skipped package."
     (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
 #+END_SRC
 
-*** Evil Mode
+** Evil Mode
 
 #+BEGIN_SRC emacs-lisp
 (require 'key-chord)
 (require 'evil)
 (require 'hydra)
+(require 'evil-surround)
 (evil-mode 1)
 (require 'general)
 (general-evil-setup)
@@ -316,18 +509,15 @@ Return a list of installed packages or nil for every skipped package."
 
 #+END_SRC
 
-*** column indicator
+
+Enable surround everywhere.
 
 #+BEGIN_SRC emacs-lisp
-(require 'fill-column-indicator)
-(setq fci-rule-width 1)
-(setq fci-rule-column 80)
-(add-hook 'after-change-major-mode-hook 'fci-mode)
-(setq fci-rule-color "#a4adbc")
-(setq fci-rule-character ?\u2502)
+(global-evil-surround-mode 1)
 #+END_SRC
 
-*** Helm
+
+** Helm
 
 #+BEGIN_SRC emacs-lisp
 (require 'helm)
@@ -350,6 +540,8 @@ Return a list of installed packages or nil for every skipped package."
 (setq helm-bibtex-bibliography '("./thesis.bib"))
 #+END_SRC
 
+
+** Linting
 *** Flycheck
 
 #+BEGIN_SRC emacs-lisp
@@ -366,7 +558,7 @@ Return a list of installed packages or nil for every skipped package."
   (add-hook hook (lambda () (flyspell-mode 1))))
 #+END_SRC
 
-*** Magit
+** Git
 
 Git support for Emacs
 
@@ -374,7 +566,7 @@ Git support for Emacs
 (require 'evil-magit)
 #+END_SRC
 
-*** Org
+** Org
 
 Org states.
 
@@ -382,7 +574,6 @@ Org states.
 (setq org-todo-keywords
   '((sequence "TODO" "WAIT" "|" "DONE" "CANCELED")))
 #+END_SRC
-
 
 Archiving.
 
@@ -421,57 +612,3 @@ Arrow that point downwards instead of ellipsis in org mode.
 #+BEGIN_SRC emacs-lisp
 (setq org-ellipsis "⤵")
 #+END_SRC
-
-
-Syntax highlighting for blocks while editing
-
-#+BEGIN_SRC emacs-lisp
-(setq org-src-fontify-natively t)
-#+END_SRC
-
-Task Management settings.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-directory "~/org")
-
-(defun org-file-path (filename)
-  "Return the absolute address of an org file, given its relative name."
-  (concat (file-name-as-directory org-directory) filename))
-
-(setq org-index-file (org-file-path "index.org"))
-(setq org-archive-location
-      (concat (org-file-path "archive.org") "::* From %s"))
-#+END_SRC
-
-Global todo lists.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-agenda-files (read-lines "~/todo.txt"))
-#+END_SRC
-
-
-
-
-Archiving time.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-log-done 'time)
-#+END_SRC
-
-*** Proselint
-
-A linter for prose.
-
-#+BEGIN_SRC emacs-lisp
-(flycheck-define-checker proselint
-  "A linter for prose."
-  :command ("proselint" source-inplace)
-  :error-patterns
-  ((warning line-start (file-name) ":" line ":" column ": "
-	    (id (one-or-more (not (any " "))))
-	    (message) line-end))
-  :modes (text-mode markdown-mode gfm-mode))
-
-(add-to-list 'flycheck-checkers 'proselint)
-#+END_SRC
-
