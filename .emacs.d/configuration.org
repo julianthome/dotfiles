@@ -24,6 +24,13 @@ message for non-existing files.
 )
 #+END_SRC
 
+List files under directory dir.
+
+#+BEGIN_SRC emacs-lisp
+(defun find-file-by-ext (dir ext) 
+  (directory-files dir nil (concat "\\." ext "$")))
+#+END_SRC
+
 * Sensible default settings
 
 Some sensible default settings some of which were taken from Harry
@@ -210,9 +217,7 @@ other, future frames."
 (define-key global-map (kbd "C--") 'decrease-font-size)
 
 (reset-font-size)
-
 #+END_SRC
-
 
 Save place.
 
@@ -250,8 +255,13 @@ is deprecated in 23.2.
 #+END_SRC
 
 
+Define the global encoding as utf-8 english US related.
 
-
+#+BEGIN_SRC emacs-lisp
+(setq system-time-locale "en_US.utf8")
+(prefer-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+#+END_SRC
 
 * Melpa
 ** General config
@@ -312,7 +322,10 @@ Return a list of installed packages or nil for every skipped package."
       'solarized-theme 
       'helm-bibtex 
       'evil-magit 
-      'flyspell)
+      'flyspell
+      'projectile
+      'helm-projectile
+)
 #+END_SRC
 
 * UI configuration
@@ -430,7 +443,6 @@ Column indicator.
 (auctex-latexmk-setup)
 #+END_SRC
 
-
 ** NeoTree
 
 #+BEGIN_SRC emacs-lisp
@@ -535,6 +547,21 @@ Enable surround everywhere.
 (global-evil-surround-mode 1)
 #+END_SRC
 
+** Projectile
+
+Enable projectile with helm support.
+
+#+BEGIN_SRC emacs-lisp
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+#+END_SRC
+
+Enable caching.
+
+#+BEGIN_SRC emacs-lisp
+(setq projectile-enable-caching t)
+#+END_SRC
 
 ** Helm
 
@@ -549,16 +576,14 @@ Enable surround everywhere.
                                       helm-source-files-in-current-dir
                                       ))
 
-(define-key evil-normal-state-map (kbd "C-p") 'helm-multi-files)
-
+;;(define-key evil-normal-state-map (kbd "C-p") 'helm-multi-files)
+(define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
 (define-key helm-map (kbd "C-j") 'helm-next-line)
 (define-key helm-map (kbd "C-k") 'helm-previous-line)
 (autoload 'helm-bibtex "helm-bibtex" "" t)
-(setq bibtex-completion-bibliography
-      '("./thesis.bib"))
-(setq helm-bibtex-bibliography '("./thesis.bib"))
+(setq bibtex-completion-bibliography (find-file-by-ext (projectile-project-root) "bib"))
+(setq helm-bibtex-bibliography (find-file-by-ext (projectile-project-root) "bib"))
 #+END_SRC
-
 
 ** Linting
 *** Flycheck
@@ -630,4 +655,10 @@ Arrow that point downwards instead of ellipsis in org mode.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-ellipsis "⤵")
+#+END_SRC
+
+Global todo list.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-files (read-lines "~/org/todo.txt"))
 #+END_SRC
