@@ -13,6 +13,13 @@ Read lines from file into list if file exists. It does not report and error
 message for non-existing files.
 
 #+BEGIN_SRC emacs-lisp
+(defun edit-config ()
+  "Edit my configuration file"
+  (find-file "~/.emacs.d/configuration.org")
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (defun read-lines (filePath)
   "Return a list of lines of a file at filePath."
   (if (file-exists-p filePath)
@@ -28,7 +35,7 @@ List files under directory dir.
 
 #+BEGIN_SRC emacs-lisp
 (defun find-file-by-ext (dir ext) 
-  (directory-files dir nil (concat "\\." ext "$")))
+  (directory-files-recursively dir (concat ext "$")))
 #+END_SRC
 
 * Sensible default settings
@@ -210,11 +217,6 @@ other, future frames."
              (floor (/ current-font-size font-change-increment))))
   (set-font-size))
 
-(define-key global-map (kbd "C-)") 'reset-font-size)
-(define-key global-map (kbd "C-+") 'increase-font-size)
-(define-key global-map (kbd "C-=") 'increase-font-size)
-(define-key global-map (kbd "C-_") 'decrease-font-size)
-(define-key global-map (kbd "C--") 'decrease-font-size)
 
 (reset-font-size)
 #+END_SRC
@@ -321,6 +323,7 @@ Return a list of installed packages or nil for every skipped package."
       'airline-themes 
       'solarized-theme 
       'helm-bibtex 
+      'magit
       'evil-magit 
       'flyspell
       'projectile
@@ -478,50 +481,16 @@ Column indicator.
 
 ;; enable replacement in visual selection per default
 (setq evil-ex-visual-char-range t)
-;;(define-key evil-normal-state-map (kbd "]b") 'next-buffer)
-;;(define-key evil-normal-state-map (kbd "[b") 'previous-buffer)
-;;(define-key evil-normal-state-map (kbd "C-S-h") 'evil-window-left)
-;;(define-key evil-normal-state-map (kbd "C-S-j") 'evil-window-down)
-;;(define-key evil-normal-state-map (kbd "C-S-k") 'evil-window-up)
-;;(define-key evil-normal-state-map (kbd "C-S-l") 'evil-window-right):w
-
-(define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
-(define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
-(define-key evil-insert-state-map (kbd "ESC") 'evil-normal-state)
-(general-nmap "Q" (general-simulate-key "gqap"))
-(general-vmap "Q" (general-simulate-key "gq"))
-
-(key-chord-define evil-normal-state-map "jk" 'evil-force-normal-state)
-(key-chord-define evil-visual-state-map "jk" 'evil-change-to-previous-state)
-(key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
-(key-chord-define evil-replace-state-map "jk" 'evil-normal-state)
-
-(key-chord-define evil-normal-state-map "ee" 'evil-emacs-state)
-;; having words with 'ee' is quite common - so do not use this in insert mode
-;;(key-chord-define evil-insert-state-map "ee" 'evil-emacs-state)
-(key-chord-define evil-emacs-state-map "ee" 'evil-normal-state)
 
 (defvar comma-leader-map (make-sparse-keymap)
   "Keymap for \"leader key\" shortcuts.")
 (define-key evil-normal-state-map "," comma-leader-map)
 
 
-(defvar bracket-leader-map (make-sparse-keymap)
-  "Keymap for \"leader key\" shortcuts.")
-(define-key evil-normal-state-map "[" bracket-leader-map)
-
 (defun my-run-latex ()
   (interactive)
   (TeX-save-document (TeX-master-file))
   (TeX-command "latexmk" 'TeX-master-file -1))
-
-
-(define-key comma-leader-map "lr" 'my-run-latex)
-(define-key comma-leader-map "ls" 'TeX-view)
-
-(define-key comma-leader-map "bn" 'next-buffer)
-(define-key comma-leader-map "bp" 'previous-buffer)
-
 
 ;; change the "leader" key to space
 ;; (define-key evil-normal-state-map "," 'evil-repeat-find-char-reverse)
@@ -533,11 +502,6 @@ Column indicator.
       (kill-this-buffer)
       (if (not (one-window-p))
           (delete-window)))
-
-(define-key comma-leader-map "bd" 'close-and-kill-this-pane)
-(define-key comma-leader-map "x" 'save-buffers-kill-emacs)
-(define-key comma-leader-map "f" 'neotree-toggle)
-
 #+END_SRC
 
 
@@ -563,6 +527,12 @@ Enable caching.
 (setq projectile-enable-caching t)
 #+END_SRC
 
+Use the current directory as root when not in a projectile project.
+
+#+BEGIN_SRC emacs-lisp
+(setq projectile-require-project-root nil)
+#+END_SRC
+
 ** Helm
 
 #+BEGIN_SRC emacs-lisp
@@ -581,8 +551,8 @@ Enable caching.
 (define-key helm-map (kbd "C-j") 'helm-next-line)
 (define-key helm-map (kbd "C-k") 'helm-previous-line)
 (autoload 'helm-bibtex "helm-bibtex" "" t)
-(setq bibtex-completion-bibliography (find-file-by-ext (projectile-project-root) "bib"))
-(setq helm-bibtex-bibliography (find-file-by-ext (projectile-project-root) "bib"))
+(setq bibtex-completion-bibliography (find-file-by-ext (projectile-project-root) "\\.bib"))
+(setq helm-bibtex-bibliography (find-file-by-ext (projectile-project-root) "\\.bib"))
 #+END_SRC
 
 ** Linting
@@ -607,10 +577,48 @@ Enable caching.
 Git support for Emacs
 
 #+BEGIN_SRC emacs-lisp
+(require 'magit)
 (require 'evil-magit)
 #+END_SRC
 
 ** Org
+
+Org Dir.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/org")
+#+END_SRC
+
+Syntax highlighting while editing.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-src-fontify-natively t)
+#+END_SRC
+
+Make tabs act as if they were issued in a major mode buffer.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-src-tab-acts-natively t)
+#+END_SRC
+
+Emacs code block.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-structure-template-alist
+             '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+#+END_SRC
+
+Enable spell checking in Org-mode.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook 'flyspell-mode)
+#+END_SRC
+
+Use the current window when editing a code snippet.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-src-window-setup 'current-window)
+#+END_SRC
 
 Org states.
 
@@ -619,12 +627,26 @@ Org states.
   '((sequence "TODO" "WAIT" "|" "DONE" "CANCELED")))
 #+END_SRC
 
-Archiving.
+Record time where a todo was archived.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-log-done 'time)
+#+END_SRC
+
+Closed tasks are archived in '~/org/archive.org'.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-archive-mark-done nil)
-(setq org-archive-location "%s_archive::* Archived Tasks")
-(require 'org-journal)
+
+(defun mark-done-and-archive ()
+  "Mark the state of an org-mode item as DONE and archive it."
+  (interactive)
+  (org-todo 'done)
+  (org-archive-subtree))
+
+(setq org-archive-location
+      (concat "~/org/archive.org::* From %s"))
+
 #+END_SRC
 
 Org Journal.
@@ -657,8 +679,82 @@ Arrow that point downwards instead of ellipsis in org mode.
 (setq org-ellipsis "⤵")
 #+END_SRC
 
-Global todo list.
+Consider all files with suffix '-ag.org' in the agenda. They are simlinked to
+inside the '~/org' directory.
 
 #+BEGIN_SRC emacs-lisp
-(setq org-agenda-files (read-lines "~/org/todo.txt"))
+(setq org-agenda-files (find-file-by-ext org-directory "-ag\\.org"))
+#+END_SRC
+
+* Keybindings
+
+
+Move to normal state.
+
+#+BEGIN_SRC emacs-lisp
+(key-chord-define evil-normal-state-map "jk" 'evil-force-normal-state)
+(key-chord-define evil-visual-state-map "jk" 'evil-change-to-previous-state)
+(key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+(key-chord-define evil-replace-state-map "jk" 'evil-normal-state)
+(define-key evil-insert-state-map (kbd "ESC") 'evil-normal-state)
+#+END_SRC
+
+Automatically wrap paragraph with to a max line len of 80.
+
+#+BEGIN_SRC emacs-lisp
+(general-nmap "Q" (general-simulate-key "gqap"))
+(general-vmap "Q" (general-simulate-key "gq"))
+#+END_SRC
+
+Scroll up and down.
+
+#+BEGIN_SRC emacs-lisp
+(define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+(define-key evil-normal-state-map (kbd "C-d") 'evil-scroll-down)
+#+END_SRC
+
+Having words with 'ee' is quite common - so do not use this in insert mode
+
+#+BEGIN_SRC emacs-lisp
+(key-chord-define evil-normal-state-map "ee" 'evil-emacs-state)
+(key-chord-define evil-emacs-state-map "ee" 'evil-normal-state)
+#+END_SRC
+
+LaTeX keybindings.
+
+#+BEGIN_SRC emacs-lisp
+(define-key comma-leader-map "lr" 'my-run-latex)
+(define-key comma-leader-map "ls" 'TeX-view)
+#+END_SRC
+
+Buffer management.
+
+#+BEGIN_SRC emacs-lisp
+(define-key comma-leader-map "bn" 'next-buffer)
+(define-key comma-leader-map "bp" 'previous-buffer)
+
+(define-key comma-leader-map "bd" 'close-and-kill-this-pane)
+(define-key comma-leader-map "x" 'save-buffers-kill-emacs)
+#+END_SRC
+
+Toggle NeoTree.
+
+#+BEGIN_SRC emacs-lisp
+(define-key comma-leader-map "f" 'neotree-toggle)
+#+END_SRC
+
+Archive Org todo's.
+
+#+BEGIN_SRC emacs-lisp
+(define-key comma-leader-map "a" 'mark-done-and-archive)
+#+END_SRC
+
+Change font sizes.
+
+#+BEGIN_SRC emacs-lisp
+(define-key global-map (kbd "C-)") 'reset-font-size)
+(define-key global-map (kbd "C-+") 'increase-font-size)
+(define-key global-map (kbd "C-=") 'increase-font-size)
+(define-key global-map (kbd "C-_") 'decrease-font-size)
+(define-key global-map (kbd "C--") 'decrease-font-size)
 #+END_SRC
