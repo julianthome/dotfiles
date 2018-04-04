@@ -38,6 +38,25 @@ List files under directory dir.
   (directory-files-recursively dir (concat ext "$")))
 #+END_SRC
 
+Rename file and buffer taken from [[https://stackoverflow.com/questions/384284/how-do-i-rename-an-open-file-in-emacs][stackoverflow]].
+
+#+BEGIN_SRC emacs-lisp
+(defun rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
+#+END_SRC
+
 * Sensible default settings
 
 Some sensible default settings some of which were taken from Harry
@@ -583,23 +602,7 @@ Git support for Emacs
 
 ** Org
 
-Org Dir.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-directory "~/org")
-#+END_SRC
-
-Syntax highlighting while editing.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-src-fontify-natively t)
-#+END_SRC
-
-Make tabs act as if they were issued in a major mode buffer.
-
-#+BEGIN_SRC emacs-lisp
-(setq org-src-tab-acts-natively t)
-#+END_SRC
+TheND_SRC
 
 Emacs code block.
 
@@ -640,7 +643,7 @@ Closed tasks are archived in '~/org/archive.org'.
 
 (defun mark-done-and-archive ()
   "Mark the state of an org-mode item as DONE and archive it."
-  (interactive)
+  (enteractive)
   (org-todo 'done)
   (org-archive-subtree))
 
@@ -684,6 +687,39 @@ inside the '~/org' directory.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-agenda-files (find-file-by-ext org-directory "-ag\\.org"))
+#+END_SRC
+
+Associate dot extension with ~graphviz-dot~ mode.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
+#+END_SRC
+
+*** Exporting
+
+Translate regular quotes to curly quotes.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-smart-quotes t)
+#+END_SRC
+
+Remove footer from HTML page.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-html-postamble nil)
+#+END_SRC
+
+Set export directory to ~export_<format>~ (see [[http://rwx.io/blog/2016/03/11/Org-Export-Configurations/][here]]).
+
+#+BEGIN_SRC emacs-lisp
+(defvar org-export-output-directory-prefix "export_" "prefix of directory used for org-mode export")
+
+(defadvice org-export-output-file-name (before org-add-export-dir activate)
+  "Modifies org-export to place exported files in a different directory"
+  (when (not pub-dir)
+      (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
+      (when (not (file-directory-p pub-dir))
+       (make-directory pub-dir))))
 #+END_SRC
 
 * Keybindings
