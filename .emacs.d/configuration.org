@@ -643,7 +643,7 @@ Closed tasks are archived in '~/org/archive.org'.
 
 (defun mark-done-and-archive ()
   "Mark the state of an org-mode item as DONE and archive it."
-  (enteractive)
+  (interactive)
   (org-todo 'done)
   (org-archive-subtree))
 
@@ -693,6 +693,18 @@ Associate dot extension with ~graphviz-dot~ mode.
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
+#+END_SRC
+
+
+Automatically mark task as done when all subtasks are done (see [[https://orgmode.org/manual/Breaking-down-tasks.html][here]]).
+
+#+BEGIN_SRC emacs-lisp
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)   ; turn off logging
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
+(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
 #+END_SRC
 
 *** Exporting
