@@ -74,6 +74,12 @@ Highlight current line.
 (global-hl-line-mode 1)
 #+END_SRC
 
+Turn on word-wrapping.
+
+#+BEGIN_SRC emacs-lisp
+(setq line-move-visual nil)
+#+END_SRC
+
 Local variables.
 
 Always set safe variables and ignore the others.
@@ -318,7 +324,7 @@ Return a list of installed packages or nil for every skipped package."
 (package-initialize)
 #+END_SRC
 
-** Packages
+** QUOTE Packages
 
 #+BEGIN_SRC emacs-lisp
 (ensure-package-installed
@@ -347,12 +353,22 @@ Return a list of installed packages or nil for every skipped package."
       'flyspell
       'projectile
       'helm-projectile
+      'unicode-fonts
+      'rust-mode
 )
 #+END_SRC
 
 * UI configuration
 
 ** General
+
+Maintain consistent line height with Unicode characters.
+
+#+BEGIN_SRC emacs-lisp
+(unicode-fonts-setup)
+#+END_SRC
+
+
 Use nice lambdas.
 
 #+BEGIN_SRC emacs-lisp
@@ -732,6 +748,14 @@ Set export directory to ~export_<format>~ (see [[http://rwx.io/blog/2016/03/11/O
       (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
       (when (not (file-directory-p pub-dir))
        (make-directory pub-dir))))
+#+END_SRC
+
+** Rust
+
+Enable rust mode.
+
+#+BEGIN_SRC emacs-lisp
+(require 'rust-mode)
 #+END_SRC
 
 * Keybindings
