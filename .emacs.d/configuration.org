@@ -643,7 +643,7 @@ Org states.
 
 #+BEGIN_SRC emacs-lisp 
 (setq org-todo-keywords
-  '((sequence "TODO" "WAIT" "|" "DONE" "CANCELED")))
+  '((sequence "IDEA" "TODO" "WAIT" "|" "DONE" "CANCELED")))
 #+END_SRC
 
 Record time where a todo was archived.
