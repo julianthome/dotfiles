@@ -638,8 +638,6 @@ Git support for Emacs
 
 ** Org
 
-TheND_SRC
-
 Emacs code block.
 
 #+BEGIN_SRC emacs-lisp
@@ -842,7 +840,7 @@ Save attachments in =~/mail-downloads=.
 (setq mu4e-attachment-dir "~/mail-downloads")
 #+END_SRC
 
-Open URL in browser with `C-c C-o`.
+Open URL in browser with =C-c C-o=.
 
 #+BEGIN_SRC emacs-lisp
 (define-key mu4e-view-mode-map (kbd "C-c C-o") 'mu4e~view-browse-url-from-binding)
