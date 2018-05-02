@@ -59,6 +59,14 @@ Rename file and buffer taken from [[https://stackoverflow.com/questions/384284/h
 
 * Sensible default settings
 
+Load path for loading homebrew packages.
+
+#+BEGIN_SRC emacs-lisp
+(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+  (normal-top-level-add-subdirs-to-load-path))
+#+END_SRC
+
+
 Some sensible default settings some of which were taken from Harry
 Schwartz' sensible default package https://github.com/hrs.
 
@@ -292,6 +300,7 @@ Define the global encoding as utf-8 english US related.
 
 * Melpa
 ** General config
+
 Setup emacs package manager.
 
 #+BEGIN_SRC emacs-lisp
@@ -324,7 +333,7 @@ Return a list of installed packages or nil for every skipped package."
 (package-initialize)
 #+END_SRC
 
-** QUOTE Packages
+** Packages
 
 #+BEGIN_SRC emacs-lisp
 (ensure-package-installed
@@ -355,7 +364,19 @@ Return a list of installed packages or nil for every skipped package."
       'helm-projectile
       'unicode-fonts
       'rust-mode
+      'use-package
+      'evil-mu4e
 )
+#+END_SRC
+
+
+Use =use-package= for loading packages on-demand.
+
+#+BEGIN_SRC emacs-lisp
+(setq use-package-verbose t)
+(setq use-package-always-ensure t)
+
+(require 'use-package)
 #+END_SRC
 
 * UI configuration
@@ -435,8 +456,7 @@ Column indicator.
 (load-theme 'airline-doom-one t)
 #+END_SRC
 
-* Latex Packages
-
+* Packages
 ** AucTex
 
 #+BEGIN_SRC emacs-lisp
@@ -756,6 +776,155 @@ Enable rust mode.
 
 #+BEGIN_SRC emacs-lisp
 (require 'rust-mode)
+#+END_SRC
+
+** mu4e
+
+At the moment mu4e is installed through homebrew with
+=brew install mu --with-emacs --HEAD=.
+
+#+BEGIN_SRC emacs-lisp
+(require 'mu4e)
+(require 'evil-mu4e)
+#+END_SRC emacs-lisp
+
+Use =mbsync= for fetching emails. The package has to be installed
+with =brew install isync= first
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-get-mail-command "killall --quiet mbsync; mbsync inboxes")
+(define-key mu4e-headers-mode-map (kbd "o") 'mu4e-update-mail-and-index)
+#+END_SRC
+
+
+Rename file when moving them between directories
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-change-filenames-when-moving t)
+#+END_SRC
+
+
+Polling interval.
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-update-interval 300)
+#+END_SRC
+
+Quit without being prompted.
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-confirm-quit nil)
+#+END_SRC
+
+Compose new messages with =C-x m= using m4e as default mail agent.
+
+#+BEGIN_SRC emacs-lisp
+(setq mail-user-agent 'mu4e-user-agent)
+#+END_SRC
+
+Org-style tables and spell checking in E-mail.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'message-mode-hook 'turn-on-orgtbl)
+(add-hook 'message-mode-hook 'turn-on-orgstruct++)
+(add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
+#+END_SRC
+
+Display sender's address alongside their name.
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-view-show-addresses t)
+#+END_SRC
+
+Save attachments in =~/mail-downloads=.
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-attachment-dir "~/mail-downloads")
+#+END_SRC
+
+Open URL in browser with `C-c C-o`.
+
+#+BEGIN_SRC emacs-lisp
+(define-key mu4e-view-mode-map (kbd "C-c C-o") 'mu4e~view-browse-url-from-binding)
+#+END_SRC
+
+For HTML E-mails, read them in browser.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'mu4e-view-actions '("html in browser" . mu4e-action-view-in-browser) t)
+#+END_SRC
+
+If an E-mail is encrypted, response should be encrypted, too.
+
+#+BEGIN_SRC emacs-lisp
+(defun encrypt-responses ()
+  (let ((msg mu4e-compose-parent-message))
+    (when msg
+      (when (member 'encrypted (mu4e-message-field msg :flags))
+        (mml-secure-message-encrypt-pgpmime)))))
+
+(add-hook 'mu4e-compose-mode-hook 'encrypt-responses)
+#+END_SRC
+
+
+Use msmtp for sending mails.
+
+#+BEGIN_SRC emacs-lisp
+(setq message-send-mail-function 'message-send-mail-with-sendmail)
+(setq message-sendmail-extra-arguments '("--read-envelope-from"))
+(setq message-sendmail-f-is-evil 't)
+(setq sendmail-program "msmtp")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;;(setq mu4e-get-mail-command "offlineimap")
+
+;; Contexts (setup smtp servers)
+;;
+(setq mu4e-compose-context-policy 'ask-if-none
+      mu4e-context-policy 'pick-first
+      mu4e-maildir "~/.mail"
+      mu4e-contexts
+      `(,(make-mu4e-context
+            :name "yahoo"
+            :enter-func (lambda () (mu4e-message "Switch to Yahoo"))
+            :match-func (lambda (msg)
+                          (when msg
+                            (string-prefix-p "/maildir-yahoo" (mu4e-message-field msg :maildir))))
+
+          :vars '((user-mail-address . "frostisch@yahoo.de")
+                  (mu4e-refile-folder . "/yahoo/Draft")
+                  (mu4e-sent-folder . "/yahoo/Gesendet")
+                  (mu4e-trash-folder . "/yahoo/Trash")
+                  (mu4e-drafts-folder . "/yahoo/Drafts")))))
+
+
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-mu4e)
+#+END_SRC
+
+When storing a link to a message in the headers view, link to the message instead of the search that resulted in that view.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-mu4e-link-query-in-headers-mode nil)
+#+END_SRC
+
+
+BBDB with mu4e.
+
+Use BBDB to handle my address book.
+
+#+BEGIN_SRC emacs-lisp
+;;(require 'bbdb-mu4e)
+#+END_SRC
+
+Don’t try to do address completion with mu4e. Use BBDB instead.
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-compose-complete-addresses nil)
 #+END_SRC
 
 * Keybindings
