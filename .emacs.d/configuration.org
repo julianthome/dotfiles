@@ -366,6 +366,7 @@ Return a list of installed packages or nil for every skipped package."
       'rust-mode
       'use-package
       'evil-mu4e
+      'mu4e-maildirs-extension
 )
 #+END_SRC
 
@@ -784,13 +785,15 @@ At the moment mu4e is installed through homebrew with
 #+BEGIN_SRC emacs-lisp
 (require 'mu4e)
 (require 'evil-mu4e)
+(require 'org-mu4e)
+(require 'mu4e-contrib)
+(mu4e-maildirs-extension) 
 #+END_SRC emacs-lisp
 
 Use =mbsync= for fetching emails. The package has to be installed
 with =brew install isync= first
 
 #+BEGIN_SRC emacs-lisp
-(setq mu4e-get-mail-command "killall --quiet mbsync; mbsync inboxes")
 (define-key mu4e-headers-mode-map (kbd "o") 'mu4e-update-mail-and-index)
 #+END_SRC
 
@@ -806,6 +809,11 @@ Polling interval.
 
 #+BEGIN_SRC emacs-lisp
 (setq mu4e-update-interval 300)
+
+(setq mu4e-get-mail-command "mbsync inboxes"
+  mu4e-update-interval 300
+  mu4e-headers-auto-update t
+) 
 #+END_SRC
 
 Quit without being prompted.
@@ -875,13 +883,9 @@ Use msmtp for sending mails.
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-;;(setq mu4e-get-mail-command "offlineimap")
-
-;; Contexts (setup smtp servers)
-;;
 (setq mu4e-compose-context-policy 'ask-if-none
       mu4e-context-policy 'pick-first
-      mu4e-maildir "~/.mail"
+      mu4e-maildir "~/Maildir"
       mu4e-contexts
       `(,(make-mu4e-context
             :name "yahoo"
@@ -922,7 +926,6 @@ Use BBDB to handle my address book.
 Don’t try to do address completion with mu4e. Use BBDB instead.
 
 #+BEGIN_SRC emacs-lisp
-(setq mu4e-compose-complete-addresses nil)
 #+END_SRC
 
 * Keybindings
