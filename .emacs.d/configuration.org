@@ -367,6 +367,7 @@ Return a list of installed packages or nil for every skipped package."
       'use-package
       'evil-mu4e
       'mu4e-maildirs-extension
+      'smtpmail
 )
 #+END_SRC
 
@@ -691,6 +692,7 @@ Org Journal.
 
 #+BEGIN_SRC emacs-lisp
 (require 'org-journal)
+(setq org-journal-dir "~/org/journal")
 #+END_SRC
 
 Pretty org bullets.
@@ -768,7 +770,6 @@ Set export directory to ~export_<format>~ (see [[http://rwx.io/blog/2016/03/11/O
       (when (not (file-directory-p pub-dir))
        (make-directory pub-dir))))
 #+END_SRC
-
 ** Rust
 
 Enable rust mode.
@@ -784,6 +785,7 @@ At the moment mu4e is installed through homebrew with
 
 #+BEGIN_SRC emacs-lisp
 (require 'mu4e)
+(require 'smtpmail)
 (require 'evil-mu4e)
 (require 'org-mu4e)
 (require 'mu4e-contrib)
@@ -892,23 +894,32 @@ Use msmtp for sending mails.
             :enter-func (lambda () (mu4e-message "Switch to Yahoo"))
             :match-func (lambda (msg)
                           (when msg
-                            (string-prefix-p "/maildir-yahoo" (mu4e-message-field msg :maildir))))
+                            (string-prefix-p "/yahoo" (mu4e-message-field msg :maildir))))
 
           :vars '((user-mail-address . "frostisch@yahoo.de")
                   (mu4e-refile-folder . "/yahoo/Draft")
-                  (mu4e-sent-folder . "/yahoo/Gesendet")
+                  (mu4e-sent-folder . "/yahoo/Sent")
                   (mu4e-trash-folder . "/yahoo/Trash")
                   (mu4e-drafts-folder . "/yahoo/Drafts")))))
+#+END_SRC
 
 
+Ask for confirmation when sending.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'message-send-hook
+                (lambda ()
+                  (unless (yes-or-no-p "Sure you want to send this? ")
+(signal 'quit nil))))
 #+END_SRC
 
 
 #+BEGIN_SRC emacs-lisp
+(setq mu4e-sent-messages-behavior 'sent)
 (require 'org-mu4e)
 #+END_SRC
 
-When storing a link to a message in the headers view, link to the message instead of the search that resulted in that view.
+When storing a link to a message in the headers view, link to the message
+instead of the search that resulted in that view.
 
 #+BEGIN_SRC emacs-lisp
 (setq org-mu4e-link-query-in-headers-mode nil)
@@ -926,6 +937,12 @@ Use BBDB to handle my address book.
 Don’t try to do address completion with mu4e. Use BBDB instead.
 
 #+BEGIN_SRC emacs-lisp
+#+END_SRC
+
+Kill buffer after sending.
+
+#+BEGIN_SRC emacs-lisp
+(setq message-kill-buffer-on-exit t)
 #+END_SRC
 
 * Keybindings
