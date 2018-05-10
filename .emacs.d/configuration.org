@@ -341,6 +341,7 @@ Return a list of installed packages or nil for every skipped package."
       'evil 
       'evil-org
       'evil-surround
+      'evil-leader
       'key-chord 
       'doom-themes 
       'fill-column-indicator
@@ -362,6 +363,7 @@ Return a list of installed packages or nil for every skipped package."
       'flyspell
       'projectile
       'helm-projectile
+      'helm-mu
       'unicode-fonts
       'rust-mode
       'use-package
@@ -640,6 +642,12 @@ Git support for Emacs
 
 ** Org
 
+Org documents should be indented per default.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-startup-indented t)
+#+END_SRC
+
 Emacs code block.
 
 #+BEGIN_SRC emacs-lisp
@@ -695,12 +703,18 @@ Org Journal.
 (setq org-journal-dir "~/org/journal")
 #+END_SRC
 
-Pretty org bullets.
+Pretty Org bullets.
 
 #+BEGIN_SRC emacs-lisp
 (require 'org)
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+END_SRC
+
+Enable evil leaders globally.
+
+#+BEGIN_SRC emacs-lisp
+(global-evil-leader-mode)
 #+END_SRC
 
 Evil keybindings.
@@ -945,6 +959,14 @@ Kill buffer after sending.
 (setq message-kill-buffer-on-exit t)
 #+END_SRC
 
+Helm support for mu4e.
+
+#+BEGIN_SRC emacs-lisp
+(require 'helm-config)
+(require 'helm-mu)
+#+END_SRC
+
+
 * Keybindings
 
 
@@ -983,7 +1005,7 @@ LaTeX keybindings.
 
 #+BEGIN_SRC emacs-lisp
 (define-key comma-leader-map "lr" 'my-run-latex)
-(define-key comma-leader-map "ls" 'TeX-view)
+(define-key comma-leader-map "lv" 'TeX-view)
 #+END_SRC
 
 Buffer management.
@@ -996,10 +1018,18 @@ Buffer management.
 (define-key comma-leader-map "x" 'save-buffers-kill-emacs)
 #+END_SRC
 
-Toggle NeoTree.
+Quickly create new org journal entry.
 
 #+BEGIN_SRC emacs-lisp
-(define-key comma-leader-map "f" 'neotree-toggle)
+(define-key comma-leader-map "oje" 'org-journal-new-entry)
+#+END_SRC
+
+Store, insert or follow org links.
+
+#+BEGIN_SRC emacs-lisp
+(define-key comma-leader-map "ols" 'org-store-link)
+(define-key comma-leader-map "oli" 'org-insert-link)
+(define-key comma-leader-map "olf" 'org-open-at-point)
 #+END_SRC
 
 Archive Org todo's.
@@ -1016,4 +1046,11 @@ Change font sizes.
 (define-key global-map (kbd "C-=") 'increase-font-size)
 (define-key global-map (kbd "C-_") 'decrease-font-size)
 (define-key global-map (kbd "C--") 'decrease-font-size)
+#+END_SRC
+
+
+Toggle NeoTree.
+
+#+BEGIN_SRC emacs-lisp
+(define-key comma-leader-map "f" 'neotree-toggle)
 #+END_SRC
