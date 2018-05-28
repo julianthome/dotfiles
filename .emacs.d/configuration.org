@@ -59,6 +59,13 @@ Rename file and buffer taken from [[https://stackoverflow.com/questions/384284/h
 
 * Sensible default settings
 
+Don't look for default.
+
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-default-init t)
+#+END_SRC
+
+
 Load path for loading homebrew packages.
 
 #+BEGIN_SRC emacs-lisp
@@ -208,15 +215,19 @@ Store backups and auto-saved files in /tmp.
 
 #+END_SRC
 
-Keybindings.
+Font settings.
 
 #+BEGIN_SRC emacs-lisp
+(setq buffer-face-mode t)
 (setq default-font "Source Code Pro")
 (setq default-font-size 16)
 (setq current-font-size default-font-size)
-
 (setq font-change-increment 1.1)
+#+END_SRC
 
+Useful functions for adjusting font settings.
+
+#+BEGIN_SRC emacs-lisp
 (defun font-code ()
   "Return a string representing the current font"
   (concat default-font "-" (number-to-string current-font-size)))
@@ -249,7 +260,6 @@ other, future frames."
         (max 1
              (floor (/ current-font-size font-change-increment))))
   (set-font-size))
-
 
 (reset-font-size)
 #+END_SRC
@@ -370,6 +380,8 @@ Return a list of installed packages or nil for every skipped package."
       'evil-mu4e
       'mu4e-maildirs-extension
       'smtpmail
+      'adoc-mode
+      'linum-relative
 )
 #+END_SRC
 
@@ -423,6 +435,7 @@ Column indicator.
 
 #+BEGIN_SRC emacs-lisp
 ;; relative numbering
+(require 'linum-relative)
 (linum-mode)
 (linum-relative-global-mode)
 #+END_SRC
@@ -561,8 +574,8 @@ Column indicator.
       (kill-this-buffer)
       (if (not (one-window-p))
           (delete-window)))
-#+END_SRC
 
+#+END_SRC
 
 Enable surround everywhere.
 
@@ -804,7 +817,7 @@ At the moment mu4e is installed through homebrew with
 (require 'org-mu4e)
 (require 'mu4e-contrib)
 (mu4e-maildirs-extension) 
-#+END_SRC emacs-lisp
+#+END_SRC 
 
 Use =mbsync= for fetching emails. The package has to be installed
 with =brew install isync= first
@@ -966,6 +979,31 @@ Helm support for mu4e.
 (require 'helm-mu)
 #+END_SRC
 
+** Asciidoc
+
+Enable asciidoc mode per default.
+
+#+BEGIN_SRC emacs-lisp
+(autoload 'adoc-mode "adoc-mode" nil t)
+#+END_SRC
+
+Use adoc mode for files with =.adoc= extension.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
+#+END_SRC
+
+In default adoc-mode the text does look a bit odd. Use normal buffer text,
+instead.
+
+#+BEGIN_SRC emacs-lisp
+;;(defun resfont ()
+;;(dolist (face '(markup-title-0-face
+;;                  markup-title-1-face
+;;markup-title-2-face
+;;))
+;;(set-face-attribute face nil :family "Source Code Pro" :weight 'semi-bold :height 1.0)))
+#+END_SRC
 
 * Keybindings
 
