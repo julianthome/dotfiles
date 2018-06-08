@@ -317,8 +317,8 @@ Setup emacs package manager.
 
 (require 'package)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+;;(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 
 (setq package-enable-at-startup nil)
 (package-initialize)
@@ -382,6 +382,7 @@ Return a list of installed packages or nil for every skipped package."
       'smtpmail
       'adoc-mode
       'linum-relative
+      'markdown-mode
 )
 #+END_SRC
 
@@ -979,7 +980,20 @@ Helm support for mu4e.
 (require 'helm-mu)
 #+END_SRC
 
+** Markdown
+
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+#+END_SRC
+
 ** Asciidoc
+
 
 Enable asciidoc mode per default.
 
