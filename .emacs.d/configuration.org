@@ -431,6 +431,21 @@ Column indicator.
 (setq fci-rule-character ?\u2502)
 #+END_SRC
 
+Always use default font settings irrespective of the mode.
+
+#+BEGIN_SRC emacs-lisp
+;; https://stackoverflow.com/questions/20682244/how-to-disable-bold-fonts-by-overriding-set-face-attribute-in-emacs
+(defun remap-faces-default-attributes ()
+   (let ((family (face-attribute 'default :family))
+         (height (face-attribute 'default :height)))
+     (mapcar (lambda (face)
+              (face-remap-add-relative
+               face :family family :weight 'normal :height height))
+          (face-list))))
+
+(when (display-graphic-p)
+   (add-hook 'change-major-mode-after-body-hook 'remap-faces-default-attributes))
+#+END_SRC
 
 ** Linum
 
@@ -1005,18 +1020,6 @@ Use adoc mode for files with =.adoc= extension.
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
-#+END_SRC
-
-In default adoc-mode the text does look a bit odd. Use normal buffer text,
-instead.
-
-#+BEGIN_SRC emacs-lisp
-;;(defun resfont ()
-;;(dolist (face '(markup-title-0-face
-;;                  markup-title-1-face
-;;markup-title-2-face
-;;))
-;;(set-face-attribute face nil :family "Source Code Pro" :weight 'semi-bold :height 1.0)))
 #+END_SRC
 
 * Keybindings
