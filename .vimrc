@@ -7,7 +7,7 @@ Plug 'klen/python-mode'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'neomake/neomake'
 Plug 'itchyny/lightline.vim'
-Plug 'taohex/lightline-buffer'
+Plug 'taohexxx/lightline-buffer'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-ragtag'
