@@ -9,6 +9,8 @@
   (find-file "~/.emacs.d/configuration.org")
 )
 
+(add-to-list 'load-path "~/.emacs.d/lisp")
+
 (defun read-lines (filePath)
   "Return a list of lines of a file at filePath."
   (if (file-exists-p filePath)
@@ -37,10 +39,9 @@
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil))))))
 
-(setq inhibit-default-init t)
+(add-hook 'after-init-hook 'global-company-mode)
 
-(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
-  (normal-top-level-add-subdirs-to-load-path))
+(setq inhibit-default-init t)
 
 (setq make-backup-files nil)
 
@@ -155,7 +156,7 @@ other, future frames."
 
 (require 'package)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
-;;(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 
 (setq package-enable-at-startup nil)
@@ -183,13 +184,18 @@ Return a list of installed packages or nil for every skipped package."
 (ensure-package-installed
       'helm 
       'evil 
+      'evil-collection
       'evil-org
       'evil-surround
       'evil-leader
+      'company
       'key-chord 
       'doom-themes 
+      'cider
+      'clojure-mode
       'fill-column-indicator
       'general 
+      'ggtags
       'hydra 
       'auctex 
       'flycheck 
@@ -198,6 +204,7 @@ Return a list of installed packages or nil for every skipped package."
       'auctex-latexmk 
       'org-bullets 
       'org-journal
+      'ox-reveal
       'powerline 
       'airline-themes 
       'solarized-theme 
@@ -333,6 +340,11 @@ Return a list of installed packages or nil for every skipped package."
     (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
     (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
 
+(setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+(setq evil-want-keybinding nil)
+(require 'evil)
+(evil-collection-init 'clojure)
+
 (require 'key-chord)
 (require 'evil)
 (require 'hydra)
@@ -391,8 +403,8 @@ Return a list of installed packages or nil for every skipped package."
 (define-key helm-map (kbd "C-j") 'helm-next-line)
 (define-key helm-map (kbd "C-k") 'helm-previous-line)
 (autoload 'helm-bibtex "helm-bibtex" "" t)
-(setq bibtex-completion-bibliography (find-file-by-ext (projectile-project-root) "\\.bib"))
-(setq helm-bibtex-bibliography (find-file-by-ext (projectile-project-root) "\\.bib"))
+;;(setq bibtex-completion-bibliography (find-file-by-ext (projectile-project-root) "\\.bib"))
+;;(setq helm-bibtex-bibliography (find-file-by-ext (projectile-project-root) "\\.bib"))
 
 (package-install 'flycheck)
 (global-flycheck-mode)
@@ -413,6 +425,8 @@ Return a list of installed packages or nil for every skipped package."
 (add-hook 'org-mode-hook 'flyspell-mode)
 
 (setq org-src-window-setup 'current-window)
+
+(require 'ox-reveal)
 
 (setq org-todo-keywords
   '((sequence "IDEA" "TODO" "WAIT" "|" "DONE" "CANCELED")))
@@ -473,79 +487,79 @@ Return a list of installed packages or nil for every skipped package."
 
 (require 'rust-mode)
 
-(require 'mu4e)
-(require 'smtpmail)
-(require 'evil-mu4e)
-(require 'org-mu4e)
-(require 'mu4e-contrib)
-(mu4e-maildirs-extension)
+;;(require 'mu4e)
+;;(require 'smtpmail)
+;;(require 'evil-mu4e)
+;;(require 'org-mu4e)
+;;(require 'mu4e-contrib)
+;;(mu4e-maildirs-extension)
 
-(define-key mu4e-headers-mode-map (kbd "o") 'mu4e-update-mail-and-index)
+;;(define-key mu4e-headers-mode-map (kbd "o") 'mu4e-update-mail-and-index)
 
-(setq mu4e-change-filenames-when-moving t)
+;;(setq mu4e-change-filenames-when-moving t)
 
-(setq mu4e-update-interval 300)
+;;(setq mu4e-update-interval 300)
 
-(setq mu4e-get-mail-command "mbsync inboxes"
-  mu4e-update-interval 300
-  mu4e-headers-auto-update t
-)
+;;(setq mu4e-get-mail-command "mbsync inboxes"
+;;  mu4e-update-interval 300
+;;  mu4e-headers-auto-update t
+;;)
 
-(setq mu4e-confirm-quit nil)
+;;(setq mu4e-confirm-quit nil)
 
-(setq mail-user-agent 'mu4e-user-agent)
+;;(setq mail-user-agent 'mu4e-user-agent)
 
-(add-hook 'message-mode-hook 'turn-on-orgtbl)
-(add-hook 'message-mode-hook 'turn-on-orgstruct++)
-(add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
+;;(add-hook 'message-mode-hook 'turn-on-orgtbl)
+;;(add-hook 'message-mode-hook 'turn-on-orgstruct++)
+;;(add-hook 'mu4e-compose-mode-hook 'flyspell-mode)
 
-(setq mu4e-view-show-addresses t)
+;;(setq mu4e-view-show-addresses t)
 
-(setq mu4e-attachment-dir "~/mail-downloads")
+;;(setq mu4e-attachment-dir "~/mail-downloads")
 
-(define-key mu4e-view-mode-map (kbd "C-c C-o") 'mu4e~view-browse-url-from-binding)
+;;(define-key mu4e-view-mode-map (kbd "C-c C-o") 'mu4e~view-browse-url-from-binding)
 
-(add-to-list 'mu4e-view-actions '("html in browser" . mu4e-action-view-in-browser) t)
+;;(add-to-list 'mu4e-view-actions '("html in browser" . mu4e-action-view-in-browser) t)
 
-(defun encrypt-responses ()
-  (let ((msg mu4e-compose-parent-message))
-    (when msg
-      (when (member 'encrypted (mu4e-message-field msg :flags))
-        (mml-secure-message-encrypt-pgpmime)))))
+;;(defun encrypt-responses ()
+;;  (let ((msg mu4e-compose-parent-message))
+;;    (when msg
+;;      (when (member 'encrypted (mu4e-message-field msg :flags))
+;;        (mml-secure-message-encrypt-pgpmime)))))
+;;
+;;(add-hook 'mu4e-compose-mode-hook 'encrypt-responses)
 
-(add-hook 'mu4e-compose-mode-hook 'encrypt-responses)
+;;(setq message-send-mail-function 'message-send-mail-with-sendmail)
+;;(setq message-sendmail-extra-arguments '("--read-envelope-from"))
+;;(setq message-sendmail-f-is-evil 't)
+;;(setq sendmail-program "msmtp")
 
-(setq message-send-mail-function 'message-send-mail-with-sendmail)
-(setq message-sendmail-extra-arguments '("--read-envelope-from"))
-(setq message-sendmail-f-is-evil 't)
-(setq sendmail-program "msmtp")
+;;(setq mu4e-compose-context-policy 'ask-if-none
+;;      mu4e-context-policy 'pick-first
+;;      mu4e-maildir "~/Maildir"
+;;      mu4e-contexts
+;;      `(,(make-mu4e-context
+;;            :name "yahoo"
+;;            :enter-func (lambda () (mu4e-message "Switch to Yahoo"))
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/yahoo" (mu4e-message-field msg :maildir))))
+;;
+;;          :vars '((user-mail-address . "frostisch@yahoo.de")
+;;                  (mu4e-refile-folder . "/yahoo/Draft")
+;;                  (mu4e-sent-folder . "/yahoo/Sent")
+;;                  (mu4e-trash-folder . "/yahoo/Trash")
+;;                  (mu4e-drafts-folder . "/yahoo/Drafts")))))
 
-(setq mu4e-compose-context-policy 'ask-if-none
-      mu4e-context-policy 'pick-first
-      mu4e-maildir "~/Maildir"
-      mu4e-contexts
-      `(,(make-mu4e-context
-            :name "yahoo"
-            :enter-func (lambda () (mu4e-message "Switch to Yahoo"))
-            :match-func (lambda (msg)
-                          (when msg
-                            (string-prefix-p "/yahoo" (mu4e-message-field msg :maildir))))
+;;(add-hook 'message-send-hook
+;;                (lambda ()
+;;                  (unless (yes-or-no-p "Sure you want to send this? ")
+;;(signal 'quit nil))))
 
-          :vars '((user-mail-address . "frostisch@yahoo.de")
-                  (mu4e-refile-folder . "/yahoo/Draft")
-                  (mu4e-sent-folder . "/yahoo/Sent")
-                  (mu4e-trash-folder . "/yahoo/Trash")
-                  (mu4e-drafts-folder . "/yahoo/Drafts")))))
+;;(setq mu4e-sent-messages-behavior 'sent)
+;;(require 'org-mu4e)
 
-(add-hook 'message-send-hook
-                (lambda ()
-                  (unless (yes-or-no-p "Sure you want to send this? ")
-(signal 'quit nil))))
-
-(setq mu4e-sent-messages-behavior 'sent)
-(require 'org-mu4e)
-
-(setq org-mu4e-link-query-in-headers-mode nil)
+;;(setq org-mu4e-link-query-in-headers-mode nil)
 
 ;;(require 'bbdb-mu4e)
 
@@ -567,6 +581,14 @@ Return a list of installed packages or nil for every skipped package."
 (autoload 'adoc-mode "adoc-mode" nil t)
 
 (add-to-list 'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
+
+(eval-after-load 'ox '(require 'ox-koma-letter))
+
+(require 'ggtags)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+                      (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+                                    (ggtags-mode 1))))
 
 (key-chord-define evil-normal-state-map "jk" 'evil-force-normal-state)
 (key-chord-define evil-visual-state-map "jk" 'evil-change-to-previous-state)

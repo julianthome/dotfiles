@@ -3,6 +3,13 @@
 
 source $HOME/.aliases
 
+ #adjust path
+
+export MSBuildSDKsPath=/opt/dotnet/sdk/$(dotnet --version)/Sdks
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$HOME/.cargo/bin
+export PATH="$PATH:/home/julian/.dotnet/tools"
+export DOTNET_ROOT="/opt/dotnet"
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -67,7 +74,7 @@ export LANG=en_US.UTF-8
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
-  export EDITOR='mvim'
+  export EDITOR='vim'
 fi
 
 # Compilation flags

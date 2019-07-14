@@ -24,7 +24,6 @@ Plug 'mattn/calendar-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'mbbill/undotree',             { 'on': 'UndotreeToggle'   }
 Plug 'mhinz/vim-signify'
@@ -256,17 +255,17 @@ let g:lightline_buffer_minflen = 16
 let g:lightline_buffer_minfextlen = 3
 let g:lightline_buffer_reservelen = 20
 let g:lightline.mode_map = {
-    \ 'n' : '𝒏',
-    \ 'i' : '𝒊',
-    \ 'R' : '𝒓',
-    \ 'v' : '𝒗',
-    \ 'V' : '𝒗-𝒍',
-    \ "\<C-v>": '𝒗-𝒃',
-    \ 'c' : '𝒄',
-    \ 's' : '𝒔',
-    \ 'S' : '𝒔-𝒍',
-    \ "\<C-s>": '𝒔-𝒃',
-    \ 't': '𝒕',
+    \ 'n' : 'n',
+    \ 'i' : 'i',
+    \ 'R' : 'r',
+    \ 'v' : 'v',
+    \ 'V' : 'v-v',
+    \ "\<C-v>": 'c-v',
+    \ 'c' : 'c',
+    \ 's' : 's',
+    \ 'S' : 'v-S',
+    \ "\<C-s>": 'c-S',
+    \ 't': 't',
     \ }
 
 " ctags
@@ -335,13 +334,13 @@ autocmd! User FzfStatusLine call <SID>fzf_statusline()
 endif
 
 "util snips
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-let g:UltiSnipsSnippetsDir="~/.vim/plugged/vim-snippets/UltiSnips"
-let g:UltiSnipsSnippetsDirectories=["~/.vim/plugged/vim-snippets/UltiSnips"]
-let g:UltiSnipsEditSplit="vertical"
-nnoremap <leader>y :UltiSnipsEdit<CR>
+"let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsJumpForwardTrigger="<c-b>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"let g:UltiSnipsSnippetsDir="~/.vim/plugged/vim-snippets/UltiSnips"
+"let g:UltiSnipsSnippetsDirectories=["~/.vim/plugged/vim-snippets/UltiSnips"]
+"let g:UltiSnipsEditSplit="vertical"
+"nnoremap <leader>y :UltiSnipsEdit<CR>
 
 " deoplete 
 if has('nvim')
