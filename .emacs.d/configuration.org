@@ -769,7 +769,7 @@ Org Journal.
   (org-journal-date-format "%e %b %Y (%A)")
   (org-journal-dir (format "~/org/journal/" (format-time-string "%Y")))
   (org-journal-file-format "%Y%m%d.gpg")
-  (org-journal-time-format "")
+  (org-journal-time-format "%R ")
 )
 
 (add-hook 'org-journal-after-entry-create-hook
