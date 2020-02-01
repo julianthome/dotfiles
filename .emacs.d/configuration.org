@@ -697,6 +697,10 @@ Git support for Emacs
 
 ** Org
 
+#+BEGIN_SRC emacs-lisp
+(require 'org)
+#+END_SRC
+
 Org documents should be indented per default.
 
 #+BEGIN_SRC emacs-lisp
@@ -752,22 +756,34 @@ Closed tasks are archived in '~/org/archive.org'.
   (org-todo 'done)
   (org-archive-subtree))
 
-(setq org-archive-location
-      (concat "~/org/archive.org::* From %s"))
-
+(setq org-archive-location "~/org/archive.org::* From %s")
 #+END_SRC
 
 Org Journal.
 
 #+BEGIN_SRC emacs-lisp
-(require 'org-journal)
-(setq org-journal-dir "~/org/journal")
+(use-package org-journal
+  :after org
+  :preface
+  :custom
+  (org-journal-date-format "%e %b %Y (%A)")
+  (org-journal-dir (format "~/org/journal/" (format-time-string "%Y")))
+  (org-journal-file-format "%Y%m%d.gpg")
+  (org-journal-time-format "%R ")
+)
+
+(add-hook 'org-journal-after-entry-create-hook
+            (lambda ()
+              (save-excursion
+                (let ((template "# -*- mode:org; epa-file-encrypt-to: \"julian.thome.de@gmail.com\" -*-"))
+                  (beginning-of-buffer)
+                  (unless (search-forward template nil t)
+                    (insert template "\n\n"))))))
 #+END_SRC
 
 Pretty Org bullets.
 
 #+BEGIN_SRC emacs-lisp
-(require 'org)
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+END_SRC
@@ -817,6 +833,13 @@ Automatically mark task as done when all subtasks are done (see [[https://orgmod
     (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 
 (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+#+END_SRC
+
+Enable file encryption.
+
+#+BEGIN_SRC emacs-lisp
+(require 'epa-file)
+(epa-file-enable)
 #+END_SRC
 
 *** Exporting
@@ -1023,8 +1046,8 @@ Kill buffer after sending.
 Helm support for mu4e.
 
 #+BEGIN_SRC emacs-lisp
-(require 'helm-config)
-(require 'helm-mu)
+;;(require 'helm-config)
+;;(require 'helm-mu)
 #+END_SRC
 
 ** Markdown
