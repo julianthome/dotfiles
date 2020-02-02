@@ -28,6 +28,8 @@
 ;; If you intend to use org, it is recommended you change this!
 (setq org-directory "~/org/")
 
+(setq projectile-project-search-path '("~/git-repositories/"))
+
 ;; If you want to change the style of line numbers, change this to `relative' or
 ;; `nil' to disable it:
 (setq display-line-numbers-type t)
