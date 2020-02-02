@@ -178,3 +178,6 @@
        :config
        ;;literate
        (default +bindings +smartparens))
+
+(require 'epa-file)
+(epa-file-enable)
