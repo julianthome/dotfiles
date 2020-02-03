@@ -148,3 +148,19 @@
                     (insert template "\n\n"))))))
 
 
+(setq org-todo-keywords
+  '((sequence "IDEA" "TODO" "WAIT" "|" "DONE" "CANCELED")))
+
+(setq org-log-done 'time)
+
+(global-evil-surround-mode 1)
+
+(setq org-ellipsis "⤵")
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(show-paren-mode 1)
+(setq show-paren-delay 0.0)
+
+(unicode-fonts-setup)
+(global-prettify-symbols-mode t)
