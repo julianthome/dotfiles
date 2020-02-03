@@ -23,6 +23,7 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 (package! org-journal)
 (package! org-super-agenda)
+(package! unicode-fonts)
 
 ;; To install a package directly from a particular repo, you'll need to specify
 ;; a `:recipe'. You'll find documentation on what `:recipe' accepts here:
