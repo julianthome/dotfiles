@@ -15,7 +15,7 @@ message for non-existing files.
 #+BEGIN_SRC emacs-lisp
 (defun edit-config ()
   "Edit my configuration file"
-  (find-file "~/.emacs.d/my-emacs.org")
+  (find-file "~/.doom.d/my-emacs.org")
 )
 #+END_SRC
 
