@@ -1,0 +1,481 @@
+* Personal Information
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Julian Thome"
+      user-mail-address "julian.thome.de@gmail.com"
+      calendar-latitude 49.815273
+      calendar-longitude 6.129583
+      calendar-location-name "Luxembourg")
+#+END_SRC
+
+* Useful functions
+
+Read lines from file into list if file exists. It does not report and error
+message for non-existing files.
+
+#+BEGIN_SRC emacs-lisp
+(defun edit-config ()
+  "Edit my configuration file"
+  (find-file "~/.emacs.d/my-emacs.org")
+)
+#+END_SRC
+
+Rename file and buffer taken from [[https://stackoverflow.com/questions/384284/how-do-i-rename-an-open-file-in-emacs][stackoverflow]].
+
+#+BEGIN_SRC emacs-lisp
+(defun rename-file-and-buffer (new-name)
+  "Renames both current buffer and file it's visiting to NEW-NAME."
+  (interactive "sNew name: ")
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (if (get-buffer new-name)
+          (message "A buffer named '%s' already exists!" new-name)
+        (progn
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))
+#+END_SRC
+
+* Sensible default settings
+
+Enable company mode by default
+#+BEGIN_SRC emacs-lisp
+(add-hook 'after-init-hook 'global-company-mode)
+#+END_SRC
+
+Don't look for default.
+
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-default-init t)
+#+END_SRC
+
+
+Some sensible default settings some of which were taken from Harry
+Schwartz' sensible default package https://github.com/hrs.
+
+Disable backup.
+
+#+BEGIN_SRC emacs-lisp
+(setq make-backup-files nil)
+#+END_SRC
+
+Highlight current line.
+
+#+BEGIN_SRC emacs-lisp
+(global-hl-line-mode 1)
+#+END_SRC
+
+Turn on word-wrapping.
+
+#+BEGIN_SRC emacs-lisp
+(setq line-move-visual nil)
+#+END_SRC
+
+Local variables.
+
+Always set safe variables and ignore the others.
+
+#+BEGIN_SRC emacs-lisp
+(setq enable-local-variables :safe)
+#+END_SRC
+
+Increase the limit before calling garbage collection.
+
+#+BEGIN_SRC emacs-lisp
+(setq gc-cons-threshold 20000000)
+#+END_SRC
+
+Always follow symlinks.
+
+#+BEGIN_SRC emacs-lisp
+(setq vc-follow-symlinks t)
+#+END_SRC
+
+Don't assume that sentences should have two spaces after
+period.
+
+#+BEGIN_SRC emacs-lisp
+(setq sentence-end-double-space nil)
+#+END_SRC
+
+Delete selected text when providing input.
+
+#+BEGIN_SRC emacs-lisp
+(delete-selection-mode 1)
+#+END_SRC
+
+Do not present the startup message; clear scratch buffer.
+
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-message t)
+(setq initial-scratch-message nil)
+#+END_SRC
+
+Human readable units.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default dired-listing-switches "-alh")
+#+END_SRC
+
+Don't ask `yes/no?', ask `y/n?'.
+
+#+BEGIN_SRC emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+Enable syntax highlighting.
+
+#+BEGIN_SRC emacs-lisp
+(global-font-lock-mode t)
+#+END_SRC
+
+Automatically sync buffer after file change.
+
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode t)
+#+END_SRC
+
+Highlight matching parens.
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode 1)
+(setq show-paren-delay 0.0)
+#+END_SRC
+
+Do not hightlight text inside parens
+
+#+BEGIN_SRC emacs-lisp
+(setq show-paren-style 'parenthesis)
+#+END_SRC
+
+When you perform a problematic operation, flash the screen
+instead of ringing the terminal bell.
+
+#+BEGIN_SRC emacs-lisp
+(setq visible-bell t)
+#+END_SRC
+
+Turn off alarms.
+
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function 'ignore)
+#+END_SRC
+
+
+Set the default line length to 120.
+
+#+BEGIN_SRC emacs-lisp
+(setq-default fill-column 120)
+#+END_SRC
+
+When you double-click on a file in the Mac Finder open it as a
+buffer in the existing Emacs frame, rather than creating a new
+frame just for that file.
+
+#+BEGIN_SRC emacs-lisp
+(setq ns-pop-up-frames nil)
+#+END_SRC
+
+Store backups and auto-saved files in /tmp.
+
+#+BEGIN_SRC emacs-lisp
+(defun backup-to-temp-directory ()
+  (setq backup-directory-alist
+        `((".*" . ,temporary-file-directory)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,temporary-file-directory t))))
+
+#+END_SRC
+
+Save place.
+
+#+BEGIN_SRC emacs-lisp
+(require 'saveplace)
+(setq auto-save-default nil)
+(setq save-place-file "~/.emacs.d/saveplace")
+(setq-default save-place t)
+#+END_SRC
+
+Show column no in mode line.
+
+#+BEGIN_SRC emacs-lisp
+(column-number-mode nil)
+#+END_SRC
+
+Define the global encoding as utf-8 english US related.
+
+#+BEGIN_SRC emacs-lisp
+(setq system-time-locale "en_US.utf8")
+(prefer-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+#+END_SRC
+
+* UI configuration
+
+** General
+
+Maintain consistent line height with Unicode characters.
+
+#+BEGIN_SRC emacs-lisp
+(unicode-fonts-setup)
+#+END_SRC
+
+
+Use nice lambdas.
+
+#+BEGIN_SRC emacs-lisp
+(global-prettify-symbols-mode t)
+#+END_SRC
+
+Use relative line numbers.
+
+#+BEGIN_SRC emacs-lisp
+(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
+#+END_SRC
+
+
+* Packages
+** Projectile
+
+Set search path
+#+BEGIN_SRC emacs-lisp
+(setq projectile-project-search-path '("~/git-repositories/"))
+#+END_SRC
+
+** Cider
+
+Closure related settings.
+#+BEGIN_SRC
+(add-hook 'clojure-mode-hook #'cider-mode)
+(add-hook 'cider-repl-mode-hook #'company-mode)
+(add-hook 'cider-mode-hook #'company-mode)
+(add-hook 'clojure-mode-hook 'enable-paredit-mode)
+(add-hook 'clojure-mode-hook 'snoopy-mode)
+#+END_SRC
+
+** Org
+
+Org directory
+
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/org/")
+#+END_SRC
+
+Emacs code block.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-structure-template-alist
+             '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+#+END_SRC
+
+Org states.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+  '((sequence "IDEA" "TODO" "WAIT" "|" "DONE" "CANCELED")))
+#+END_SRC
+
+Record time when a todo was archived.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-log-done 'time)
+#+END_SRC
+
+Closed tasks are archived in '~/org/archive.org'.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-archive-mark-done nil)
+
+(defun mark-done-and-archive ()
+  "Mark the state of an org-mode item as DONE and archive it."
+  (interactive)
+  (org-todo 'done)
+  (org-archive-subtree))
+
+(setq org-archive-location "~/org/archive.org::* From %s")
+#+END_SRC
+
+Org Journal settings. File location, entry format and encryption.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-journal
+  :after org
+  :preface
+  :custom
+  (org-journal-date-format "%e %b %Y (%A)")
+  (org-journal-dir (format "~/org/journal/" (format-time-string "%Y")))
+  (org-journal-file-format "%Y%m%d.gpg")
+  (org-journal-time-format "%R ")
+)
+
+(add-hook 'org-journal-after-entry-create-hook
+            (lambda ()
+              (save-excursion
+                (let ((template "# -*- mode:org; epa-file-encrypt-to: \"julian.thome.de@gmail.com\" -*-"))
+                  (beginning-of-buffer)
+                  (unless (search-forward template nil t)
+                    (insert template "\n\n"))))))
+#+END_SRC
+
+Pretty Org bullets.
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+END_SRC
+
+Arrow that point downwards instead of ellipsis in org mode.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-ellipsis "⤵")
+#+END_SRC
+
+Consider all files with suffix '-ag.org' in the agenda. They are symlinked to
+inside the '~/org' directory.
+
+#+BEGIN_SRC emacs-lisp
+(defun find-file-by-ext (dir ext) 
+  (directory-files-recursively dir (concat ext "$")))
+
+(setq org-agenda-files (find-file-by-ext org-directory "-ag\\.org"))
+#+END_SRC
+
+Associate dot extension with ~graphviz-dot~ mode.
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
+#+END_SRC
+
+
+Automatically mark task as done when all subtasks are done (see [[https://orgmode.org/manual/Breaking-down-tasks.html][here]]).
+
+#+BEGIN_SRC emacs-lisp
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)   ; turn off logging
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
+(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+#+END_SRC
+
+Enable file encryption.
+
+#+BEGIN_SRC emacs-lisp
+(require 'epa-file)
+(epa-file-enable)
+#+END_SRC
+
+Org super agenda settings.
+
+#+BEGIN_SRC emacs-lisp
+(def-package! org-super-agenda
+  :after org-agenda
+  :init
+  (setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-block-separator nil
+      org-agenda-compact-blocks t
+      org-agenda-start-day nil ;; i.e. today
+      org-agenda-span 1
+      org-agenda-start-on-weekday nil)
+  (setq org-agenda-custom-commands
+        '(("c" "Super view"
+           ((agenda "" ((org-agenda-overriding-header "")
+                        (org-super-agenda-groups
+                         '((:name "Today"
+                                  :time-grid t
+                                  :date today
+                                  :order 1)))))
+            (alltodo "" ((org-agenda-overriding-header "")
+                         (org-super-agenda-groups
+                          '((:log t)
+                            (:name "To refile"
+                                   :file-path "refile\\.org")
+                            (:name "Next to do"
+                                   :todo "NEXT"
+                                   :order 1)
+                            (:name "Important"
+                                   :priority "A"
+                                   :order 6)
+                            (:name "Today's tasks"
+                                   :file-path "journal/")
+                            (:name "Due Today"
+                                   :deadline today
+                                   :order 2)
+                            (:name "Scheduled Soon"
+                                   :scheduled future
+                                   :order 8)
+                            (:name "Overdue"
+                                   :deadline past
+                                   :order 7)
+                            (:name "Meetings"
+                                   :and (:todo "MEET" :scheduled future)
+                                   :order 10)
+                            (:discard (:not (:todo "TODO")))))))))))
+  :config
+  (org-super-agenda-mode))
+#+END_SRC
+
+*** Exporting
+
+Translate regular quotes to curly quotes.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-smart-quotes t)
+#+END_SRC
+
+Remove footer from HTML page.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-html-postamble nil)
+#+END_SRC
+
+Set export directory to ~export_<format>~ (see [[http://rwx.io/blog/2016/03/11/Org-Export-Configurations/][here]]).
+
+#+BEGIN_SRC emacs-lisp
+(defvar org-export-output-directory-prefix "export_" "prefix of directory used for org-mode export")
+
+(defadvice org-export-output-file-name (before org-add-export-dir activate)
+  "Modifies org-export to place exported files in a different directory"
+  (when (not pub-dir)
+      (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
+      (when (not (file-directory-p pub-dir))
+       (make-directory pub-dir))))
+#+END_SRC
+
+* Keybindings/Shortcuts
+
+Org mode Journal.
+
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      (:prefix ("j" . "journal") ;; org-journal bindings
+        :desc "Create new journal entry" "j" #'org-journal-new-entry
+        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
+        :desc "Open next entry" "n" #'org-journal-open-next-entry
+        :desc "Search journal" "s" #'org-journal-search-forever))
+
+(map!
+ (:map calendar-mode-map
+   :n "o" #'org-journal-display-entry
+   :n "p" #'org-journal-previous-entry
+   :n "n" #'org-journal-next-entry
+   :n "O" #'org-journal-new-date-entry))
+
+(map!
+ :map (calendar-mode-map)
+ :localleader
+ "w" #'org-journal-search-calendar-week
+ "m" #'org-journal-search-calendar-month
+ "y" #'org-journal-search-calendar-year)
+#+END_SRC
+
+* Company mode
+
+#+BEGIN_SRC emacs-lisp
+(setq company-idle-delay 0.1)
+(setq company-minimum-prefix-length 2)
+#+END_SRC
