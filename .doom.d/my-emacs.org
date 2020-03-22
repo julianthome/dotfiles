@@ -314,7 +314,7 @@ Org Journal settings. File location, entry format and encryption.
 (add-hook 'org-journal-after-entry-create-hook
             (lambda ()
               (save-excursion
-                (let ((template "# -*- mode:org; epa-file-encrypt-to: \"julian.thome.de@gmail.com\" -*-"))
+                (let ((template "# -*- mode: org ; epa-file-encrypt-to: \"julian.thome.de@gmail.com\" -*-"))
                   (beginning-of-buffer)
                   (unless (search-forward template nil t)
                     (insert template "\n\n"))))))
