@@ -21,6 +21,7 @@
 
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+(package! org)
 (package! org-journal)
 (package! org-super-agenda)
 (package! unicode-fonts)
