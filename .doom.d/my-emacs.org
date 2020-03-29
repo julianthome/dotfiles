@@ -477,6 +477,7 @@ Org mode Journal.
 * Company mode
 
 #+BEGIN_SRC emacs-lisp
+(require 'company)
 (setq company-idle-delay 0.1)
 (setq company-minimum-prefix-length 2)
 #+END_SRC
