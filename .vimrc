@@ -175,7 +175,13 @@ let g:lightline.mode_map = {
     \ 't': 't',
     \ }
 
-" File search
+" popup settings
+hi Pmenu ctermfg=NONE ctermbg=238 cterm=NONE guifg=NONE guibg=#323232 gui=NONE
+hi PmenuSel ctermfg=188 ctermbg=24 term=reverse guifg=NONE guibg=#214283 gui=NONE
+hi PmenuSbar  ctermfg=NONE ctermbg=24 guifg=NONE guibg=#8e9292
+hi PmenuThumb ctermfg=59 ctermbg=NONE guifg=NONE guibg=NONE
+
+" = Plugin settings =
 " fzf settings
 if executable("fzf")
     autocmd BufNew * set rnu
