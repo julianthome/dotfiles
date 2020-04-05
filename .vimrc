@@ -38,7 +38,7 @@ set noshowmode
 set autoread
 "" fast scrolling
 set ttyfast
-set spell
+" set spell
 set hlsearch
 set backspace=2
 """ do not automatically wrap on load 
