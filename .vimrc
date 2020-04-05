@@ -3,7 +3,6 @@
 " = List of VIM Plugins =
 call plug#begin('~/.nvim/plugged')
 Plug 'itchyny/lightline.vim'
-Plug 'joshdick/onedark.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/seoul256.vim'
@@ -101,29 +100,19 @@ imap jk <Esc>
 " = Visuals =
 
 "" main theme
-colorscheme onedark
+colorscheme seoul256
+let g:seoul256_background = 235
+set background=dark
 syntax on
-set ruler
-"" set text width
 set tw=79
+set ruler
 set cursorline
-highlight CursorLine ctermbg=235 guibg=#2c2d27
-"" crosshair for the cursor
-" set cursorcolumn
-highlight CursorColumn ctermbg=235 guibg=#2c2d27
-" set listchars=tab:>-,trail:∙,extends:>,precedes:<,eol:⏎
-
-let g:onedark_termcolors = 256
-let g:onedark_terminal_italics = 1
-let g:onedark_hide_endofbuffer = 1
-""" draw a line at to mark text-width > 80
-let &colorcolumn=join(range(81,81),",")
-highlight ColorColumn ctermbg=235 guibg=#2c2d27
+set colorcolumn=80
 
 """ KISS lightline settings
 set hidden
 let g:lightline = {
-    \ 'colorscheme': 'onedark',
+    \ 'colorscheme': 'seoul256',
     \ 'tabline': {
     \   'left': [ [ 'bufferinfo' ],
     \             [ 'separator' ],
