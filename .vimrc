@@ -1,20 +1,27 @@
-" My minimal vim configuration
+" My vim config
 
 " = List of VIM Plugins =
+"" This list should be kept as minimal as possible: only use plugins in case
+"" the functionality cannot be easily achieved by tweaking the vim config.
 call plug#begin('~/.nvim/plugged')
+""" visuals
+Plug 'junegunn/seoul256.vim'
 Plug 'itchyny/lightline.vim'
+
+""" file searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/seoul256.vim'
-Plug 'neomake/neomake'
-" syntax highlighting for a plethora of different languages
-Plug 'sheerun/vim-polyglot'
-" highlight changed lines for git
+
+""" highlight git changes in the sidebar
 Plug 'airblade/vim-gitgutter'
-" LSP
-" Switch to nvim-lsp once it is mature enough
-" Plug 'neovim/nvim-lsp'
+
+""" language support
+"""" LSP
+""""" TODO: switch to nvim-lsp once it is mature enough
+"""" Plug 'neovim/nvim-lsp'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"""" syntax highlighting for a plethora of different languages
+Plug 'sheerun/vim-polyglot'
 call plug#end()
 
 set expandtab
@@ -188,7 +195,6 @@ hi Float ctermfg=67 ctermbg=NONE cterm=NONE guifg=#7ca8c6 guibg=NONE gui=NONE
 hi VertSplit ctermfg=60 ctermbg=236 cterm=NONE guifg=#555555 guibg=#323232 gui=NONE
 
 "" netrw settings
-
 """ automatically switch to current working dir
 set autochdir
 
