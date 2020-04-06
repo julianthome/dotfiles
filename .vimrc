@@ -109,7 +109,7 @@ set ruler
 set cursorline
 set colorcolumn=80
 
-""" KISS lightline settings
+"" KISS lightline settings
 set hidden
 let g:lightline = {
     \ 'colorscheme': 'seoul256',
@@ -150,7 +150,7 @@ let g:lightline_buffer_active_buffer_left_icon = ''
 let g:lightline_buffer_active_buffer_right_icon = ''
 let g:lightline_buffer_separator_icon = ''
 
-" lightline-buffer function settings
+"" lightline-buffer function settings
 let g:lightline_buffer_show_bufnr = 1
 let g:lightline_buffer_rotate = 0
 let g:lightline_buffer_fname_mod = ':t'
@@ -166,23 +166,65 @@ let g:lightline.mode_map = {
     \ 'i' : 'i',
     \ 'R' : 'r',
     \ 'v' : 'v',
-    \ 'V' : 'v-v',
-    \ "\<C-v>": 'c-v',
+    \ 'V' : 'v',
+    \ "\<C-v>": 'c',
     \ 'c' : 'c',
     \ 's' : 's',
-    \ 'S' : 'v-S',
-    \ "\<C-s>": 'c-S',
+    \ 'S' : 'v',
+    \ "\<C-s>": 'c',
     \ 't': 't',
     \ }
 
-" popup settings
+"" popup settings
 hi Pmenu ctermfg=NONE ctermbg=238 cterm=NONE guifg=NONE guibg=#323232 gui=NONE
 hi PmenuSel ctermfg=188 ctermbg=24 term=reverse guifg=NONE guibg=#214283 gui=NONE
 hi PmenuSbar  ctermfg=NONE ctermbg=24 guifg=NONE guibg=#8e9292
 hi PmenuThumb ctermfg=59 ctermbg=NONE guifg=NONE guibg=NONE
+hi ErrorMsg ctermfg=15 ctermbg=88 cterm=NONE guifg=#ffffff guibg=#990000 gui=NONE
+hi WarningMsg ctermfg=15 ctermbg=88 cterm=NONE guifg=#ffffff guibg=#990000 gui=NONE
+hi Float ctermfg=67 ctermbg=NONE cterm=NONE guifg=#7ca8c6 guibg=NONE gui=NONE
 
-" = Plugin settings =
-" fzf settings
+"" vertical split separator
+hi VertSplit ctermfg=60 ctermbg=236 cterm=NONE guifg=#555555 guibg=#323232 gui=NONE
+
+"" netrw settings
+
+""" automatically switch to current working dir
+set autochdir
+
+""" let netrw look like a file browser
+"" https://shapeshed.com/vim-netrw/
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+
+"" toggle file browser
+"" https://stackoverflow.com/questions/5006950/setting-netrw-like-nerdtree
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+      let wino = bufwinnr(t:expl_buf_num)
+      if wino != -1
+          let cur_wino = winnr()
+          exec wino . 'wincmd w'
+          close
+          exec cur_wino . 'wincmd w'
+          unlet t:expl_buf_num
+      else
+          unlet t:expl_buf_num
+      endif
+  else
+      exec '1wincmd w'
+      Vexplore
+      let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
+
+map <leader>op :call ToggleVExplorer()<CR>
+
+"" fzf settings start
+" TODO: Replace this with a lua script
 if executable("fzf")
     autocmd BufNew * set rnu
     autocmd TermOpen * set rnu
@@ -214,12 +256,11 @@ function! s:fzf_statusline()
 endfunction
 
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
-    
 endif
+"" fzf settings end
 
 " = LSP/Coc =
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+"" Keybindings
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
