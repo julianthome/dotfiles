@@ -11,6 +11,7 @@ Plug 'itchyny/lightline.vim'
 """ file searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'preservim/nerdtree'
 
 """ highlight git changes in the sidebar
 Plug 'airblade/vim-gitgutter'
@@ -22,6 +23,10 @@ Plug 'airblade/vim-gitgutter'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 """" syntax highlighting for a plethora of different languages
 Plug 'sheerun/vim-polyglot'
+
+""" editing
+"""" TODO: reimplement in lua
+Plug 'tpope/vim-surround'
 call plug#end()
 
 set expandtab
@@ -44,7 +49,8 @@ set noshowmode
 set autoread
 "" fast scrolling
 set ttyfast
-" set spell
+"" spelling
+set spell
 set hlsearch
 set backspace=2
 """ do not automatically wrap on load 
@@ -115,6 +121,13 @@ set tw=79
 set ruler
 set cursorline
 set colorcolumn=80
+
+"" spelling errors highlighting colors
+hi clear SpellBad
+hi SpellBad cterm=underline
+hi SpellBad gui=undercurl
+hi SpellBad ctermfg=15 ctermbg=88 cterm=NONE guifg=#ffffff guibg=#990000 gui=NONE
+"hi SpellBad ctermfg=009 ctermbg=011 guifg=#ff0000 guibg=#ffff00
 
 "" KISS lightline settings
 set hidden
@@ -203,31 +216,9 @@ set autochdir
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
-let g:netrw_altv = 1
 let g:netrw_winsize = 25
 
-"" toggle file browser
-"" https://stackoverflow.com/questions/5006950/setting-netrw-like-nerdtree
-function! ToggleVExplorer()
-  if exists("t:expl_buf_num")
-      let wino = bufwinnr(t:expl_buf_num)
-      if wino != -1
-          let cur_wino = winnr()
-          exec wino . 'wincmd w'
-          close
-          exec cur_wino . 'wincmd w'
-          unlet t:expl_buf_num
-      else
-          unlet t:expl_buf_num
-      endif
-  else
-      exec '1wincmd w'
-      Vexplore
-      let t:expl_buf_num = bufnr("%")
-  endif
-endfunction
-
-map <leader>op :call ToggleVExplorer()<CR>
+map <leader>op :NERDTreeToggle<CR>
 
 "" fzf settings start
 " TODO: Replace this with a lua script
