@@ -1,0 +1,19 @@
+#!/bin/bash
+
+SUBMODULE="$1"
+
+[ -z "$SUBMODULE" ] && {
+    echo "usage ./$(basename "$BASH_SOURCE") <submodule>"
+    exit 1
+}
+
+[ -d "$SUBMODULE" ] || [ -d ".git/modules/$SUBMODULE" ] || {
+    echo "no submodule named $SUBMODULE available"
+    exit 1
+}
+
+git submodule deinit -f "$1"
+rm -rf ".git/modules/$SUBMODULE"
+git rm -f "$SUBMODULE"
+
+exit 0

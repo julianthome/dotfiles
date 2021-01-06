@@ -30,7 +30,7 @@ call plug#end()
 
 set expandtab
 set smarttab
-set clipboard=unnamedplus
+set clipboard^=unnamed,unnamedplus
 set bs=2
 set mouse=a
 """ incremental refined search
