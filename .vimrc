@@ -4,34 +4,33 @@
 "" This list should be kept as minimal as possible: only use plugins in case
 "" the functionality cannot be easily achieved by tweaking the vim config.
 call plug#begin('~/.nvim/plugged')
-""" visuals
-Plug 'junegunn/seoul256.vim'
-Plug 'itchyny/lightline.vim'
+
+""" visuals/statusline/icons
+Plug 'chriskempson/base16-vim'
+Plug 'hoob3rt/lualine.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'ryanoasis/vim-devicons'
 
 """ file searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'preservim/nerdtree'
+Plug 'kyazdani42/nvim-tree.lua'
 
 """ highlight git changes in the sidebar
 Plug 'airblade/vim-gitgutter'
 
 """ language support
 """" LSP
-""""" TODO: switch to nvim-lsp once it is mature enough
-"""" Plug 'neovim/nvim-lsp'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+
 """" syntax highlighting for a plethora of different languages
 Plug 'sheerun/vim-polyglot'
-
-""" editing
-"""" TODO: reimplement in lua
-Plug 'tpope/vim-surround'
 call plug#end()
 
 set expandtab
 set smarttab
-set clipboard=unnamed
+set clipboard=unnamedplus
 set bs=2
 set mouse=a
 """ incremental refined search
@@ -67,6 +66,7 @@ set rnu
 """ command history
 set history=700
 set undolevels=700
+
 """ maintain undo history when closing the file
 if has("persistent_undo")
     set undodir=~/.undodir/
@@ -110,90 +110,15 @@ vnoremap <down> <nop>
 "" map jk instead of ESC
 imap jk <Esc>
 
-" = Visuals =
+""" Theme
+let base16colorspace=256
+colorscheme base16-default-dark
 
-"" main theme
-colorscheme seoul256
-let g:seoul256_background = 235
-set background=dark
 syntax on
 set tw=79
 set ruler
 set cursorline
 set colorcolumn=80
-
-"" spelling errors highlighting colors
-hi clear SpellBad
-hi SpellBad cterm=underline
-hi SpellBad gui=undercurl
-hi SpellBad ctermfg=15 ctermbg=88 cterm=NONE guifg=#ffffff guibg=#990000 gui=NONE
-"hi SpellBad ctermfg=009 ctermbg=011 guifg=#ff0000 guibg=#ffff00
-
-"" KISS lightline settings
-set hidden
-let g:lightline = {
-    \ 'colorscheme': 'seoul256',
-    \ 'tabline': {
-    \   'left': [ [ 'bufferinfo' ],
-    \             [ 'separator' ],
-    \             [ 'bufferbefore', 'buffercurrent', 'bufferafter' ], ],
-    \ },
-    \ 'component_expand': {
-    \   'buffercurrent': 'lightline#buffer#buffercurrent',
-    \   'bufferbefore': 'lightline#buffer#bufferbefore',
-    \   'bufferafter': 'lightline#buffer#bufferafter',
-    \ },
-    \ 'component_type': {
-    \   'buffercurrent': 'tabsel',
-    \   'bufferbefore': 'raw',
-    \   'bufferafter': 'raw',
-    \ },
-    \ 'component_function': {
-    \   'bufferinfo': 'lightline#buffer#bufferinfo',
-    \ },
-    \ 'component': {
-    \   'separator': '',
-    \ },
-    \ 'separator':    { 'left': '', 'right': '' },
-    \ 'subseparator': { 'left': '|', 'right': '|' },
-    \ 'tabline_separator': { 'left' : '', 'right' : '' },
-    \ }
-
-let g:lightline_buffer_logo = ''
-let g:lightline_buffer_readonly_icon = ''
-let g:lightline_buffer_modified_icon = ''
-let g:lightline_buffer_git_icon = ''
-let g:lightline_buffer_ellipsis_icon = ''
-let g:lightline_buffer_expand_left_icon = '< '
-let g:lightline_buffer_expand_right_icon = ' >'
-let g:lightline_buffer_active_buffer_left_icon = ''
-let g:lightline_buffer_active_buffer_right_icon = ''
-let g:lightline_buffer_separator_icon = ''
-
-"" lightline-buffer function settings
-let g:lightline_buffer_show_bufnr = 1
-let g:lightline_buffer_rotate = 0
-let g:lightline_buffer_fname_mod = ':t'
-let g:lightline_buffer_excludes = ['vimfiler']
-
-let g:lightline_buffer_maxflen = 30
-let g:lightline_buffer_maxfextlen = 3
-let g:lightline_buffer_minflen = 16
-let g:lightline_buffer_minfextlen = 3
-let g:lightline_buffer_reservelen = 20
-let g:lightline.mode_map = {
-    \ 'n' : 'n',
-    \ 'i' : 'i',
-    \ 'R' : 'r',
-    \ 'v' : 'v',
-    \ 'V' : 'v',
-    \ "\<C-v>": 'c',
-    \ 'c' : 'c',
-    \ 's' : 's',
-    \ 'S' : 'v',
-    \ "\<C-s>": 'c',
-    \ 't': 't',
-    \ }
 
 "" popup settings
 hi Pmenu ctermfg=NONE ctermbg=238 cterm=NONE guifg=NONE guibg=#323232 gui=NONE
@@ -207,63 +132,52 @@ hi Float ctermfg=67 ctermbg=NONE cterm=NONE guifg=#7ca8c6 guibg=NONE gui=NONE
 "" vertical split separator
 hi VertSplit ctermfg=60 ctermbg=236 cterm=NONE guifg=#555555 guibg=#323232 gui=NONE
 
-"" netrw settings
-""" automatically switch to current working dir
-set autochdir
-
-""" let netrw look like a file browser
-"" https://shapeshed.com/vim-netrw/
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-let g:netrw_browse_split = 4
-let g:netrw_winsize = 25
-
-map <leader>op :NERDTreeToggle<CR>
+""" Nvim tree
+map <leader>fm :NvimTreeToggle<CR>
 
 "" fzf settings start
 " TODO: Replace this with a lua script
 if executable("fzf")
-    autocmd BufNew * set rnu
-    autocmd TermOpen * set rnu
-    let g:fzf_layout = { 'window': 'enew' }
-    let g:fzf_tags_command = 'ctags -R'
-    command! -bang -nargs=* Rg
-                \ call fzf#vim#grep(
-                \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-                \   <bang>0 ? fzf#vim#with_preview('up:60%')
-                \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-                \   <bang>0)
-
-nnoremap <c-p> :FZF<CR> 
-nnoremap <leader>c :Commit<CR>
-nnoremap <leader>h :History<CR>
+    nnoremap <leader>ff :Files<CR> 
+endif
 
 """ grep quickly and interactively through files with rg
 if executable("rg")
     nnoremap <leader>rg :Rg<CR>
 endif
 
-""" integrate fzf into UI
-function! s:fzf_statusline()
-  " Override statusline as you like
-  highlight fzf1 ctermfg=161 ctermbg=251
-  highlight fzf2 ctermfg=23 ctermbg=251
-  highlight fzf3 ctermfg=237 ctermbg=251
-  setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
-endfunction
-
-autocmd! User FzfStatusLine call <SID>fzf_statusline()
-endif
 "" fzf settings end
 
-" = LSP/Coc =
+" = LSP =
 "" Keybindings
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
 
-nmap <leader>rn <Plug>(coc-rename)
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+"" Setup language servers and status line
+lua << EOF
+  require 'lspconfig'.solargraph.setup{ name = "solargraph" }
+  require 'lspconfig'.clojure_lsp.setup{ name = "clojure_lsp" }
+  require 'lspconfig'.gopls.setup{on_attach=require'completion'.on_attach}
+  local lualine = require('lualine')
+  lualine.status()
+  lualine.extensions = { 'fzf' }
+  lualine.theme = 'onedark'
+EOF
+
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
+
+" Avoid showing message extra message when using completion
+set shortmess+=c
 

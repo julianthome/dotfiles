@@ -31,7 +31,7 @@ font:
     family: DejaVu Sans Mono
 
   # Point size
-  size: 15
+  size: 10
 
   use_thin_strokes: true
 
@@ -42,15 +42,14 @@ font:
 
 key_bindings:
   - { key: Equals,   mods: Control,       action: IncreaseFontSize }
-  - { key: Add,      mods: Control,       action: IncreaseFontSize }
-  - { key: Subtract, mods: Control,       action: DecreaseFontSize }
+  - { key: Plus,     mods: Control,       action: IncreaseFontSize }
   - { key: Minus,    mods: Control,       action: DecreaseFontSize }
+  - { key: V,        mods: Control|Shift, action: Paste            }
 
-# Colors (Seoul256)
 colors:
   # Default colors
   primary:
-    background: '#292929'
+    background: '#1c1c1c'
     foreground: '#d0d0d0'
 
   # Normal colors
