@@ -40,6 +40,12 @@ Rename file and buffer taken from [[https://stackoverflow.com/questions/384284/h
 
 * Sensible default settings
 
+Make every shell a login shell
+
+#+BEGIN_SRC emacs-lisp
+(setq multi-term-program-switches "--login")
+#+END_SRC
+
 Enable company mode by default
 #+BEGIN_SRC emacs-lisp
 (add-hook 'after-init-hook 'global-company-mode)
@@ -91,6 +97,12 @@ Always follow symlinks.
 
 #+BEGIN_SRC emacs-lisp
 (setq vc-follow-symlinks t)
+#+END_SRC
+
+Press RET to follow links
+
+#+BEGIN_SRC emacs-lisp
+(setq org-return-follows-link t)
 #+END_SRC
 
 Don't assume that sentences should have two spaces after
@@ -320,13 +332,6 @@ Org Journal settings. File location, entry format and encryption.
                     (insert template "\n\n"))))))
 #+END_SRC
 
-Pretty Org bullets.
-
-#+BEGIN_SRC emacs-lisp
-(require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-#+END_SRC
-
 Arrow that point downwards instead of ellipsis in org mode.
 
 #+BEGIN_SRC emacs-lisp
@@ -366,58 +371,6 @@ Enable file encryption.
 #+BEGIN_SRC emacs-lisp
 (require 'epa-file)
 (epa-file-enable)
-#+END_SRC
-
-Org super agenda settings.
-
-#+BEGIN_SRC emacs-lisp
-(def-package! org-super-agenda
-  :after org-agenda
-  :init
-  (setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-block-separator nil
-      org-agenda-compact-blocks t
-      org-agenda-start-day nil ;; i.e. today
-      org-agenda-span 1
-      org-agenda-start-on-weekday nil)
-  (setq org-agenda-custom-commands
-        '(("c" "Super view"
-           ((agenda "" ((org-agenda-overriding-header "")
-                        (org-super-agenda-groups
-                         '((:name "Today"
-                                  :time-grid t
-                                  :date today
-                                  :order 1)))))
-            (alltodo "" ((org-agenda-overriding-header "")
-                         (org-super-agenda-groups
-                          '((:log t)
-                            (:name "To refile"
-                                   :file-path "refile\\.org")
-                            (:name "Next to do"
-                                   :todo "NEXT"
-                                   :order 1)
-                            (:name "Important"
-                                   :priority "A"
-                                   :order 6)
-                            (:name "Today's tasks"
-                                   :file-path "journal/")
-                            (:name "Due Today"
-                                   :deadline today
-                                   :order 2)
-                            (:name "Scheduled Soon"
-                                   :scheduled future
-                                   :order 8)
-                            (:name "Overdue"
-                                   :deadline past
-                                   :order 7)
-                            (:name "Meetings"
-                                   :and (:todo "MEET" :scheduled future)
-                                   :order 10)
-                            (:discard (:not (:todo "TODO")))))))))))
-  :config
-  (org-super-agenda-mode))
 #+END_SRC
 
 *** Exporting
