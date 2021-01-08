@@ -1,0 +1,9 @@
+#!/bin/bash
+
+[ -d '.git/' ] || exit 1
+
+BROWSER="$(xdg-settings get default-web-browser)"
+BROWSER=${BROWSER%.*}
+$BROWSER "$(git config --get remote.origin.url | awk -F'[:@]' '{print "https://" $2  "/" $3 }')"
+
+exit 0
