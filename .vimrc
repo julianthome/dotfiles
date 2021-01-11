@@ -150,21 +150,31 @@ endif
 
 " = LSP =
 "" Keybindings
-nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nmap     <leader>lrn :lua vim.lsp.buf.rename()<CR>
+nnoremap <leader>ldf :lua vim.lsp.buf.definition()<CR>
+nnoremap <leader>ldc :lua vim.lsp.buf.declaration()<CR>
+nnoremap <leader>lhv :lua vim.lsp.buf.hover()<CR>
+nnoremap <leader>li  :lua vim.lsp.buf.implementation()<CR>
+nnoremap <leader>lm  :lua vim.lsp.buf.signature_help()<CR>
+nnoremap <leader>ltd :lua vim.lsp.buf.type_definition()<CR>
+nnoremap <leader>lr  :lua vim.lsp.buf.references()<CR>
+nnoremap <leader>lds :lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <leader>lws :lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <leader>lca :lua vim.lsp.buf.code_action()<CR>
 
 "" Setup language servers and status line
 lua << EOF
-  require 'lspconfig'.solargraph.setup{ name = "solargraph" }
+  require 'lspconfig'.solargraph.setup{
+    name = "solargraph",
+    settings = {
+        solargraph = {
+            diagnostics = true
+        }
+    }
+  }
   require 'lspconfig'.clojure_lsp.setup{ name = "clojure_lsp" }
   require 'lspconfig'.gopls.setup{on_attach=require'completion'.on_attach}
+  require 'lspconfig'.rust_analyzer.setup{on_attach=require'completion'.on_attach}
   local lualine = require('lualine')
   lualine.status()
   lualine.extensions = { 'fzf' }
