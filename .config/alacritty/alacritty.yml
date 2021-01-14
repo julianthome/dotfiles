@@ -17,24 +17,12 @@ scrolling:
   history: 10000
 
 font:
-  # The normal (roman) font face to use.
   normal:
-    family: Hack Nerd Font Mono
-    style: Regular
-
-  # The bold font face
-  bold:
-    family: Hack Nerd Font Mono
-    style: Bold
-
-  # The italic font face
-  italic:
-    family: Hack Nerd Font Mono
-    style: Italic
+    family: "Fira Code Nerd Font Mono"
 
   # The normal (roman) font face to use.
   # Point size
-  size: 12
+  size: 11
 
   use_thin_strokes: true
 
@@ -52,28 +40,40 @@ key_bindings:
 colors:
   # Default colors
   primary:
-    background: '#1c1c1c'
-    foreground: '#d0d0d0'
+    background: '0x1d1f21'
+    foreground: '0xc5c8c6'
+
+  # Colors the cursor will use if `custom_cursor_colors` is true
+  cursor:
+    text: '0x1d1f21'
+    cursor: '0xc5c8c6'
 
   # Normal colors
   normal:
-    black:   '#343d46'
-    red:     '#EC5f67'
-    green:   '#99C794'
-    yellow:  '#FAC863'
-    blue:    '#6699cc'
-    magenta: '#c594c5'
-    cyan:    '#5fb3b3'
-    white:   '#d8dee9'
+    black:   '0x1d1f21'
+    red:     '0xcc6666'
+    green:   '0xb5bd68'
+    yellow:  '0xf0c674'
+    blue:    '0x81a2be'
+    magenta: '0xb294bb'
+    cyan:    '0x8abeb7'
+    white:   '0xc5c8c6'
 
   # Bright colors
   bright:
-    black:   '#343d46'
-    red:     '#EC5f67'
-    green:   '#99C794'
-    yellow:  '#FAC863'
-    blue:    '#6699cc'
-    magenta: '#c594c5'
-    cyan:    '#5fb3b3'
-    white:   '#d8dee9'
+    black:   '0x969896'
+    red:     '0xcc6666'
+    green:   '0xb5bd68'
+    yellow:  '0xf0c674'
+    blue:    '0x81a2be'
+    magenta: '0xb294bb'
+    cyan:    '0x8abeb7'
+    white:   '0xffffff'
 
+  indexed_colors:
+    - { index: 16, color: '0xde935f' }
+    - { index: 17, color: '0xa3685a' }
+    - { index: 18, color: '0x282a2e' }
+    - { index: 19, color: '0x373b41' }
+    - { index: 20, color: '0xb4b7b4' }
+    - { index: 21, color: '0xe0e0e0' }
