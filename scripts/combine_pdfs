@@ -1,0 +1,8 @@
+#!/bin/bash
+
+OUTFILE="out_$(date +%s-%H%M%s).pdf"
+echo "writing to $OUTFILE"
+
+gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress -sOutputFile="$OUTFILE" *.pdf 
+
+exit 0
