@@ -26,6 +26,7 @@ Plug 'nvim-lua/completion-nvim'
 
 """" syntax highlighting for a plethora of different languages
 Plug 'sheerun/vim-polyglot'
+Plug 'mhartington/oceanic-next'
 call plug#end()
 
 set expandtab
@@ -110,11 +111,10 @@ vnoremap <down> <nop>
 "" map jk instead of ESC
 imap jk <Esc>
 
-""" Theme
-let base16colorspace=256
-colorscheme base16-default-dark
-
 syntax on
+let g:oceanic_next_terminal_bold = 1
+let g:oceanic_next_terminal_italic = 1
+colorscheme OceanicNext
 set tw=79
 set ruler
 set cursorline

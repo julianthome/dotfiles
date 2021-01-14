@@ -17,21 +17,24 @@ scrolling:
   history: 10000
 
 font:
+  # The normal (roman) font face to use.
   normal:
-    family: DejaVu Sans Mono
+    family: Hack Nerd Font Mono
+    style: Regular
 
+  # The bold font face
   bold:
-    family: DejaVu Sans Mono
+    family: Hack Nerd Font Mono
+    style: Bold
 
+  # The italic font face
   italic:
-    family: DejaVu Sans Mono
+    family: Hack Nerd Font Mono
+    style: Italic
 
-  # Bold italic font face
-  bold_italic:
-    family: DejaVu Sans Mono
-
+  # The normal (roman) font face to use.
   # Point size
-  size: 10
+  size: 14
 
   use_thin_strokes: true
 
@@ -54,23 +57,23 @@ colors:
 
   # Normal colors
   normal:
-    black:   '#4e4e4e'
-    red:     '#d68787'
-    green:   '#5f865f'
-    yellow:  '#d8af5f'
-    blue:    '#85add4'
-    magenta: '#d7afaf'
-    cyan:    '#87afaf'
-    white:   '#d0d0d0'
+    black:   '#343d46'
+    red:     '#EC5f67'
+    green:   '#99C794'
+    yellow:  '#FAC863'
+    blue:    '#6699cc'
+    magenta: '#c594c5'
+    cyan:    '#5fb3b3'
+    white:   '#d8dee9'
 
   # Bright colors
   bright:
-    black:   '#626262'
-    red:     '#d75f87'
-    green:   '#87af87'
-    yellow:  '#ffd787'
-    blue:    '#add4fb'
-    magenta: '#ffafaf'
-    cyan:    '#87d7d7'
-    white:   '#e4e4e4'
+    black:   '#343d46'
+    red:     '#EC5f67'
+    green:   '#99C794'
+    yellow:  '#FAC863'
+    blue:    '#6699cc'
+    magenta: '#c594c5'
+    cyan:    '#5fb3b3'
+    white:   '#d8dee9'
 
