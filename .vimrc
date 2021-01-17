@@ -6,7 +6,7 @@
 call plug#begin('~/.nvim/plugged')
 
 """ visuals/statusline/icons
-Plug 'chriskempson/base16-vim'
+Plug 'morhetz/gruvbox'
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ryanoasis/vim-devicons'
@@ -26,7 +26,6 @@ Plug 'nvim-lua/completion-nvim'
 
 """" syntax highlighting for a plethora of different languages
 Plug 'sheerun/vim-polyglot'
-Plug 'mhartington/oceanic-next'
 call plug#end()
 
 set expandtab
@@ -112,9 +111,14 @@ vnoremap <down> <nop>
 imap jk <Esc>
 
 syntax on
-let g:oceanic_next_terminal_bold = 1
-let g:oceanic_next_terminal_italic = 1
-colorscheme OceanicNext
+let g:gruvbox_bold=1
+let g:gruvbox_italics=1
+let g:gruvbox_transparent_bg=1
+let g:gruvbox_underline=1
+let g:gruvbox_undercurl=1
+let g:gruvbox_contrast_dark='soft'
+colorscheme gruvbox
+
 set tw=79
 set ruler
 set cursorline
@@ -178,7 +182,7 @@ lua << EOF
   local lualine = require('lualine')
   lualine.status()
   lualine.extensions = { 'fzf' }
-  lualine.theme = 'onedark'
+  lualine.theme = 'gruvbox'
 EOF
 
 " Use <Tab> and <S-Tab> to navigate through popup menu
