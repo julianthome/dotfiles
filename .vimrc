@@ -6,16 +6,13 @@
 call plug#begin('~/.nvim/plugged')
 
 """ visuals/statusline/icons
-Plug 'morhetz/gruvbox'
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ryanoasis/vim-devicons'
-
 """ file searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'kyazdani42/nvim-tree.lua'
-
 """ highlight git changes in the sidebar
 Plug 'airblade/vim-gitgutter'
 
@@ -23,7 +20,7 @@ Plug 'airblade/vim-gitgutter'
 """" LSP
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-
+Plug 'kristijanhusak/vim-hybrid-material'
 """" syntax highlighting for a plethora of different languages
 Plug 'sheerun/vim-polyglot'
 call plug#end()
@@ -50,7 +47,6 @@ set autoread
 set ttyfast
 "" spelling
 set spell
-set hlsearch
 set backspace=2
 """ do not automatically wrap on load 
 set nowrap
@@ -111,30 +107,17 @@ vnoremap <down> <nop>
 imap jk <Esc>
 
 syntax on
-let g:gruvbox_bold=1
-let g:gruvbox_italics=1
-let g:gruvbox_transparent_bg=1
-let g:gruvbox_underline=1
-let g:gruvbox_undercurl=1
-let g:gruvbox_contrast_dark='soft'
-colorscheme gruvbox
+
+" Color
+let g:enable_bold_font = 1
+let g:enable_italic_font = 1
+set background=dark
+colorscheme hybrid_reverse
 
 set tw=79
 set ruler
 set cursorline
 set colorcolumn=80
-
-"" popup settings
-hi Pmenu ctermfg=NONE ctermbg=238 cterm=NONE guifg=NONE guibg=#323232 gui=NONE
-hi PmenuSel ctermfg=188 ctermbg=24 term=reverse guifg=NONE guibg=#214283 gui=NONE
-hi PmenuSbar  ctermfg=NONE ctermbg=24 guifg=NONE guibg=#8e9292
-hi PmenuThumb ctermfg=59 ctermbg=NONE guifg=NONE guibg=NONE
-hi ErrorMsg ctermfg=15 ctermbg=88 cterm=NONE guifg=#ffffff guibg=#990000 gui=NONE
-hi WarningMsg ctermfg=15 ctermbg=88 cterm=NONE guifg=#ffffff guibg=#990000 gui=NONE
-hi Float ctermfg=67 ctermbg=NONE cterm=NONE guifg=#7ca8c6 guibg=NONE gui=NONE
-
-"" vertical split separator
-hi VertSplit ctermfg=60 ctermbg=236 cterm=NONE guifg=#555555 guibg=#323232 gui=NONE
 
 """ Nvim tree
 map <leader>fm :NvimTreeToggle<CR>
@@ -168,21 +151,14 @@ nnoremap <leader>lca :lua vim.lsp.buf.code_action()<CR>
 
 "" Setup language servers and status line
 lua << EOF
-  require 'lspconfig'.solargraph.setup{
-    name = "solargraph",
-    settings = {
-        solargraph = {
-            diagnostics = true
-        }
-    }
-  }
   require 'lspconfig'.clojure_lsp.setup{ name = "clojure_lsp" }
-  require 'lspconfig'.gopls.setup{on_attach=require'completion'.on_attach}
-  require 'lspconfig'.rust_analyzer.setup{on_attach=require'completion'.on_attach}
+  require 'lspconfig'.gopls.setup{on_attach=require'completion'.on_attach }
+  require 'lspconfig'.solargraph.setup { on_attach=require'completion'.on_attach } 
+  require 'lspconfig'.rust_analyzer.setup{on_attach=require'completion'.on_attach }
   local lualine = require('lualine')
   lualine.status()
   lualine.extensions = { 'fzf' }
-  lualine.theme = 'gruvbox'
+  lualine.theme = 'onedark'
 EOF
 
 " Use <Tab> and <S-Tab> to navigate through popup menu

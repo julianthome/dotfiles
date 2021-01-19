@@ -325,7 +325,7 @@ Org Journal settings. File location, entry format and encryption.
 (add-hook 'org-journal-after-entry-create-hook
             (lambda ()
               (save-excursion
-                (let ((template "# -*- mode: org; epa-file-encrypt-to: \"julian@org.org\" -*-"))
+                (let ((template "# -*- mode: org; epa-file-encrypt-to: (\"julian@org.org\") -*-"))
                   (beginning-of-buffer)
                   (unless (search-forward template nil t)
                     (insert template "\n\n"))))))
@@ -370,6 +370,8 @@ Enable file encryption.
 #+BEGIN_SRC emacs-lisp
 (require 'epa-file)
 (epa-file-enable)
+(setq epa-file-select-keys nil)
+(setq epa-file-encrypt-to '("julian@org.org"))
 #+END_SRC
 
 *** Exporting
