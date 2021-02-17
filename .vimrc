@@ -20,7 +20,7 @@ Plug 'airblade/vim-gitgutter'
 """" LSP
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-Plug 'kristijanhusak/vim-hybrid-material'
+Plug 'arcticicestudio/nord-vim'
 """" syntax highlighting for a plethora of different languages
 Plug 'sheerun/vim-polyglot'
 call plug#end()
@@ -107,12 +107,15 @@ vnoremap <down> <nop>
 imap jk <Esc>
 
 syntax on
-
-" Color
-let g:enable_bold_font = 1
-let g:enable_italic_font = 1
-set background=dark
-colorscheme hybrid_reverse
+let g:nord_cursor_line_number_background = 1
+let g:nord_uniform_status_lines = 1
+let g:nord_bold_vertical_split_line = 1
+let g:nord_uniform_diff_background = 1
+let g:nord_bold = 1
+let g:nord_italic = 1
+let g:nord_italic_comments = 1
+let g:nord_underline = 1
+colorscheme nord
 
 set tw=79
 set ruler
@@ -149,16 +152,30 @@ nnoremap <leader>lds :lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <leader>lws :lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <leader>lca :lua vim.lsp.buf.code_action()<CR>
 
+"nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+"nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+"nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+"nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+"nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+"nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+"nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+"nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+"nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+
+
+
 "" Setup language servers and status line
 lua << EOF
   require 'lspconfig'.clojure_lsp.setup{ name = "clojure_lsp" }
   require 'lspconfig'.gopls.setup{on_attach=require'completion'.on_attach }
   require 'lspconfig'.solargraph.setup { on_attach=require'completion'.on_attach } 
   require 'lspconfig'.rust_analyzer.setup{on_attach=require'completion'.on_attach }
+  require 'lspconfig'.texlab.setup{on_attach=require'completion'.on_attach }
   local lualine = require('lualine')
   lualine.status()
   lualine.extensions = { 'fzf' }
-  lualine.theme = 'onedark'
+  lualine.options.theme = 'nord'
+  lualine.options.separator = ''
 EOF
 
 " Use <Tab> and <S-Tab> to navigate through popup menu
