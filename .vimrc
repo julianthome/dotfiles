@@ -159,11 +159,32 @@ lua << EOF
   require 'lspconfig'.solargraph.setup { on_attach=require'completion'.on_attach } 
   require 'lspconfig'.rust_analyzer.setup{on_attach=require'completion'.on_attach }
   require 'lspconfig'.texlab.setup{on_attach=require'completion'.on_attach }
-  local lualine = require('lualine')
-  lualine.status()
-  lualine.extensions = { 'fzf' }
-  lualine.options.theme = 'nord'
-  lualine.options.separator = ''
+
+  require('lualine').setup{
+    options = {
+      theme = 'nord',
+      section_separators = {'', ''},
+      component_separators = {'', ''},
+      icons_enabled = true,
+    },
+    sections = {
+      lualine_a = { {'mode', upper = true} },
+      lualine_b = { {'branch', icon = ''} },
+      lualine_c = { {'filename', file_status = true} },
+      lualine_x = { 'encoding', 'fileformat', 'filetype' },
+      lualine_y = { 'progress' },
+      lualine_z = { 'location'  },
+    },
+    inactive_sections = {
+      lualine_a = {  },
+      lualine_b = {  },
+      lualine_c = { 'filename' },
+      lualine_x = { 'location' },
+      lualine_y = {  },
+      lualine_z = {   }
+    },
+    extensions = { 'fzf' }
+  }
 EOF
 
 " Use <Tab> and <S-Tab> to navigate through popup menu
