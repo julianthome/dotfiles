@@ -18,7 +18,7 @@ scrolling:
 
 font:
   normal:
-    family: "Fira Code Nerd Font Mono"
+    family: "Mononoki"
 
   # The normal (roman) font face to use.
   # Point size
