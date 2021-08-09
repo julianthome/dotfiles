@@ -220,7 +220,13 @@ if executable("rg")
     nnoremap <leader>rg :Rg<CR>
 endif
 
-"" fzf settings end
+function! Synctex()
+  " remove 'silent' for debugging
+  execute "silent !zathura --synctex-forward " . line('.') . ":" . col('.') . ":" . bufname('%') . " " . bufname('%')[:-5]. ".pdf"
+  redraw!
+endfunction
+
+map <leader>lv :call Synctex()<CR><CR>
 
 " = LSP =
 "" Keybindings

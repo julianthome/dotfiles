@@ -18,11 +18,16 @@ scrolling:
 
 font:
   normal:
+    #family: "UbuntuMono Nerd Font"
+    #family: "JetBrains Mono"
+    #family: "Fira Code Nerd Font"
+    #family: "JetBrains Mono"
     family: "Fira Code Nerd Font Mono"
+    style: Regular
 
   # The normal (roman) font face to use.
   # Point size
-  size: 11
+  size: 12
 
   use_thin_strokes: true
 
