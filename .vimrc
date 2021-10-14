@@ -9,10 +9,12 @@ call plug#begin('~/.nvim/plugged')
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ryanoasis/vim-devicons'
+Plug 'Yggdroot/indentLine'
 """ file searching
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'kyazdani42/nvim-tree.lua'
+Plug 'RRethy/vim-illuminate'
 """ highlight git changes in the sidebar
 Plug 'airblade/vim-gitgutter'
 
@@ -246,11 +248,16 @@ nnoremap <leader>lca :lua vim.lsp.buf.code_action()<CR>
 lua << EOF
   require 'lspconfig'.clojure_lsp.setup{ name = "clojure_lsp" }
   require 'lspconfig'.gopls.setup{on_attach=require'completion'.on_attach }
-  require 'lspconfig'.solargraph.setup { on_attach=require'completion'.on_attach } 
+  require 'lspconfig'.solargraph.setup { 
+    on_attach = function(client)
+      require 'completion'.on_attach(client)
+      require 'illuminate'.on_attach(client)
+    end,
+  } 
   require 'lspconfig'.rust_analyzer.setup{on_attach=require'completion'.on_attach }
   require 'lspconfig'.texlab.setup{on_attach=require'completion'.on_attach }
   require 'lspconfig'.r_language_server.setup{on_attach=require'completion'.on_attach }
-
+  require'nvim-tree'.setup{}
   require('lualine').setup{
     options = {
       theme = 'nord',
@@ -289,3 +296,12 @@ set completeopt=menuone,noinsert,noselect
 " Avoid showing message extra message when using completion
 set shortmess+=c
 
+ let g:Illuminate_ftHighlightGroups = {
+      \ 'vim': ['vimVar', 'vimString', 'vimLineComment',
+      \         'vimFuncName', 'vimFunction', 'vimUserFunc', 'vimFunc']
+      \ }
+let g:Illuminate_highlightUnderCursor = 0
+let g:Illuminate_delay = 500
+
+let g:indentLine_setColors = 0
+let g:indentLine_char_list = ['·']
