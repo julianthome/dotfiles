@@ -21,7 +21,13 @@ Plug 'airblade/vim-gitgutter'
 """ language support
 """" LSP
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/cmp-nvim-lsp', { 'branch': 'main' }
+Plug 'hrsh7th/cmp-buffer', { 'branch': 'main' }
+Plug 'hrsh7th/nvim-cmp', { 'branch': 'main' }
+Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main' }
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+""" Plug 'nvim-lua/completion-nvim'
 Plug 'arcticicestudio/nord-vim'
 """" syntax highlighting for a plethora of different languages
 Plug 'sheerun/vim-polyglot'
@@ -238,20 +244,74 @@ nnoremap <leader>lds :lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <leader>lws :lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <leader>lca :lua vim.lsp.buf.code_action()<CR>
 
+imap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
+smap <expr> <C-j>   vsnip#expandable()  ? '<Plug>(vsnip-expand)'         : '<C-j>'
+" Expand or jump
+imap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+smap <expr> <C-l>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<C-l>'
+" Jump forward or backward
+imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
+" See https://github.com/hrsh7th/vim-vsnip/pull/50
+nmap        s   <Plug>(vsnip-select-text)
+xmap        s   <Plug>(vsnip-select-text)
+nmap        S   <Plug>(vsnip-cut-text)
+xmap        S   <Plug>(vsnip-cut-text)
+
+" If you want to use snippet for multiple filetypes, you can `g:vsnip_filetypes` for it.
+let g:vsnip_filetypes = {}
+let g:vsnip_filetypes.javascriptreact = ['javascript']
+let g:vsnip_filetypes.typescriptreact = ['typescript']
+let g:vsnip_filetypes.golang = ['go']
+
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
+
+
 "" Setup language servers and status line
 lua << EOF
+    local has_words_before = function()
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+    end
+
+    local cmp = require'cmp'
+    cmp.setup({
+        snippet = {
+            expand = function(args)
+                vim.fn["vsnip#anonymous"](args.body)
+            end,
+        },
+        mapping = {
+        ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+        ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+        ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+        ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.close(),
+        ['<CR>'] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+            }),
+        ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' })
+            },
+        sources = {
+            { name = 'nvim_lsp' },
+            { name = 'vsnip' },
+            { name = 'buffer' },
+            },
+})
+
   require 'lspconfig'.clojure_lsp.setup{ name = "clojure_lsp" }
-  require 'lspconfig'.gopls.setup{on_attach=require'completion'.on_attach }
-  require 'lspconfig'.solargraph.setup { 
-    on_attach = function(client)
-      require 'completion'.on_attach(client)
-      require 'illuminate'.on_attach(client)
-    end,
-  } 
-  require 'lspconfig'.rust_analyzer.setup{on_attach=require'completion'.on_attach }
-  require 'lspconfig'.texlab.setup{on_attach=require'completion'.on_attach }
-  require 'lspconfig'.r_language_server.setup{on_attach=require'completion'.on_attach }
-  require'nvim-tree'.setup{}
+  require 'lspconfig'.gopls.setup{
+    capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  }
+  require 'nvim-tree'.setup{}
   require('lualine').setup{
     options = {
       theme = 'nord',
@@ -279,22 +339,17 @@ lua << EOF
   }
 EOF
 
-" Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" Set completeopt to have a better completion experience
-set completeopt=menuone,noinsert,noselect
+let g:vsnip_snippet_dir = resolve('~/.config/nvim/snippets')
 
 " Avoid showing message extra message when using completion
 set shortmess+=c
-
- let g:Illuminate_ftHighlightGroups = {
-      \ 'vim': ['vimVar', 'vimString', 'vimLineComment',
-      \         'vimFuncName', 'vimFunction', 'vimUserFunc', 'vimFunc']
-      \ }
+let g:Illuminate_ftHighlightGroups = {
+     \ 'vim': ['vimVar', 'vimString', 'vimLineComment',
+     \         'vimFuncName', 'vimFunction', 'vimUserFunc', 'vimFunc']
+     \ }
 let g:Illuminate_highlightUnderCursor = 0
 let g:Illuminate_delay = 500
 
 let g:indentLine_setColors = 0
 let g:indentLine_char_list = ['·']
+
