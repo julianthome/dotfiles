@@ -28,9 +28,12 @@ Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main' }
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
 """ Plug 'nvim-lua/completion-nvim'
-Plug 'arcticicestudio/nord-vim'
+"""Plug 'arcticicestudio/nord-vim'
+Plug 'EdenEast/nightfox.nvim', { 'branch': 'main' }
+
 """" syntax highlighting for a plethora of different languages
 Plug 'sheerun/vim-polyglot'
+Plug 'rafamadriz/friendly-snippets', { 'branch': 'main' }
 call plug#end()
 
 set expandtab
@@ -114,17 +117,20 @@ vnoremap <down> <nop>
 "" map jk instead of ESC
 imap jk <Esc>
 
-syntax on
-let g:nord_cursor_line_number_background = 1
-let g:nord_uniform_status_lines = 1
-let g:nord_bold_vertical_split_line = 1
-let g:nord_uniform_diff_background = 1
-let g:nord_bold = 1
-let g:nord_italic = 1
-let g:nord_italic_comments = 1
-let g:nord_underline = 1
-colorscheme nord
-set background=dark
+"syntax on
+"let g:nord_cursor_line_number_background = 1
+"let g:nord_uniform_status_lines = 1
+"let g:nord_bold_vertical_split_line = 1
+"let g:nord_uniform_diff_background = 1
+"let g:nord_bold = 1
+"let g:nord_italic = 1
+"let g:nord_italic_comments = 1
+"let g:nord_underline = 1
+""colorscheme nord
+""set background=dark
+""colorscheme nordfox
+""set background=dark
+colorscheme nordfox
 
 set tw=79
 set ruler
@@ -314,7 +320,7 @@ lua << EOF
   require 'nvim-tree'.setup{}
   require('lualine').setup{
     options = {
-      theme = 'nord',
+      theme = 'nordfox',
       section_separators = {'', ''},
       component_separators = {'', ''},
       icons_enabled = false,
@@ -338,6 +344,32 @@ lua << EOF
     extensions = { 'fzf' }
   }
 EOF
+
+lua << EOF
+local nightfox = require('nightfox')
+
+-- This function set the configuration of nightfox. If a value is not passed in the setup function
+-- it will be taken from the default configuration above
+nightfox.setup({
+  fox = "nordfox", -- change the colorscheme to use nordfox
+  styles = {
+    comments = "italic", -- change style of comments to be italic
+    keywords = "bold", -- change style of keywords to be bold
+    functions = "italic,bold" -- styles can be a comma separated list
+  },
+  colors = {
+    red = "#FF000", -- Override the red color for MAX POWER
+    bg_alt = "#000000",
+  },
+  hlgroups = {
+    TSPunctDelimiter = { fg = "${red}" }, -- Override a highlight group with the color red
+    LspCodeLens = { bg = "#000000", style = "italic" },
+  }
+})
+-- Load the configuration set above and apply the colorscheme
+nightfox.load()
+EOF
+
 
 let g:vsnip_snippet_dir = resolve('~/.config/nvim/snippets')
 
