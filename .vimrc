@@ -9,18 +9,23 @@ call plug#begin('~/.nvim/plugged')
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ryanoasis/vim-devicons'
-Plug 'Yggdroot/indentLine'
-""" file searching
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+Plug 'lukas-reineke/indent-blankline.nvim'
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
+
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'RRethy/vim-illuminate'
+
 """ highlight git changes in the sidebar
 Plug 'airblade/vim-gitgutter'
 
 """ language support
 """" LSP
 Plug 'neovim/nvim-lspconfig'
+
+"""" Completion
 Plug 'hrsh7th/cmp-nvim-lsp', { 'branch': 'main' }
 Plug 'hrsh7th/cmp-buffer', { 'branch': 'main' }
 Plug 'hrsh7th/cmp-path', { 'branch': 'main' }
@@ -28,12 +33,12 @@ Plug 'hrsh7th/nvim-cmp', { 'branch': 'main' }
 Plug 'hrsh7th/cmp-vsnip', { 'branch': 'main' }
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/vim-vsnip-integ'
-""" Plug 'nvim-lua/completion-nvim'
-"""Plug 'arcticicestudio/nord-vim'
 Plug 'EdenEast/nightfox.nvim', { 'branch': 'main' }
 
 """" syntax highlighting for a plethora of different languages
-Plug 'sheerun/vim-polyglot'
+
+""" Plug 'sheerun/vim-polyglot'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'rafamadriz/friendly-snippets', { 'branch': 'main' }
 call plug#end()
 
@@ -118,21 +123,21 @@ vnoremap <down> <nop>
 "" map jk instead of ESC
 imap jk <Esc>
 
-"syntax on
-"let g:nord_cursor_line_number_background = 1
-"let g:nord_uniform_status_lines = 1
-"let g:nord_bold_vertical_split_line = 1
-"let g:nord_uniform_diff_background = 1
-"let g:nord_bold = 1
-"let g:nord_italic = 1
-"let g:nord_italic_comments = 1
-"let g:nord_underline = 1
-""colorscheme nord
-""set background=dark
-""colorscheme nordfox
-""set background=dark
-set background=dark
-colorscheme nordfox
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ignore_install = { "javascript" }, -- List of parsers to ignore installing
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { "c", "rust" },  -- list of language that will be disabled
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
 
 set tw=79
 set ruler
@@ -224,17 +229,28 @@ set termguicolors " this variable must be enabled for colors to be applied prope
 " a list of groups can be found at `:help nvim_tree_highlight`
 highlight NvimTreeFolderIcon guibg=blue
 
+" = Searching = "
+lua << EOF
+-- You dont need to set any of these options. These are the default ones. Only
+-- the loading is important
+require('telescope').setup {
+    extensions = {
+        fzy_native = {
+            override_generic_sorter = false,
+            override_file_sorter = true,
+        }
+    }
+}
+require('telescope').load_extension('fzy_native')
+EOF
 
-"" fzf settings start
-" TODO: Replace this with a lua script
-if executable("fzf")
-    nnoremap <leader>ff :Files<CR> 
-endif
-
-""" grep quickly and interactively through files with rg
-if executable("rg")
-    nnoremap <leader>rg :Rg<CR>
-endif
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fl <cmd>lua require('telescope.builtin').lsp_references()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fB <cmd>lua require('telescope.builtin').git_branches()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+nnoremap <leader>fv <cmd>lua require('telescope.builtin').git_files()<cr>
 
 function! Synctex()
   " remove 'silent' for debugging
@@ -325,14 +341,16 @@ lua << EOF
             },
 })
 
-  require 'lspconfig'.clojure_lsp.setup{ name = "clojure_lsp" }
   require 'lspconfig'.gopls.setup{
+    capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  }
+  require 'lspconfig'.solargraph.setup{
     capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
   }
   require 'nvim-tree'.setup{}
   require('lualine').setup{
     options = {
-      theme = 'nordfox',
+      theme = 'nightfox',
       section_separators = {'', ''},
       component_separators = {'', ''},
       icons_enabled = false,
@@ -363,25 +381,24 @@ local nightfox = require('nightfox')
 -- This function set the configuration of nightfox. If a value is not passed in the setup function
 -- it will be taken from the default configuration above
 nightfox.setup({
-  fox = "nordfox", -- change the colorscheme to use nordfox
-  styles = {
+fox = "nordfox", -- change the colorscheme to use nordfox
+styles = {
     comments = "italic", -- change style of comments to be italic
     keywords = "bold", -- change style of keywords to be bold
     functions = "italic,bold" -- styles can be a comma separated list
-  },
-  colors = {
+    },
+colors = {
     red = "#FF000", -- Override the red color for MAX POWER
     bg_alt = "#000000",
-  },
-  hlgroups = {
+    },
+hlgroups = {
     TSPunctDelimiter = { fg = "${red}" }, -- Override a highlight group with the color red
     LspCodeLens = { bg = "#000000", style = "italic" },
-  }
+    }
 })
 -- Load the configuration set above and apply the colorscheme
 nightfox.load()
 EOF
-
 
 let g:vsnip_snippet_dir = resolve('~/.config/nvim/snippets')
 
